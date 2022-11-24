@@ -58,6 +58,7 @@ function DOM_ListTasks(tasks){
 
 
 // Given an array of tasks, lists the ones due within the range. 
+// Note: When given a range of 1, it will only list tasks with same duedate as today!
 function DOM_ListRangeTasks(tasks, range){
     const taskList = document.querySelector('#taskList');
     taskList.innerHTML = '';
@@ -153,6 +154,8 @@ function DOM_Update(){
     if (document.querySelector('#allTasks').classList.contains('selected')){
         DOM_ListTasks(inbox.getTasks());
     } else if (document.querySelector('#today').classList.contains('selected')) {
-        DOM_ListTodayTasks(inbox.getTasks());
+        DOM_ListRangeTasks(inbox.getTasks(),1);
+    } else if (document.querySelector('#thisWeek').classList.contains('selected')) {
+        DOM_ListRangeTasks(inbox.getTasks(),7);
     }
 }
