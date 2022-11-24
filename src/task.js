@@ -1,12 +1,16 @@
 export { taskItemFactory }
 
-const taskItemFactory = (title) => {
-    function getname(){
+const taskItemFactory = (title, date) => {
+    let uuid = self.crypto.randomUUID();
+    function getName(){
         return title;
     }
-    function setname(newName){
+    function getDate(){
+        return date;
+    }
+    function setName(newName){
         title = newName;
     }
-    return { title, getname, setname };
+    return { uuid, getName, setName, getDate };
 };
 

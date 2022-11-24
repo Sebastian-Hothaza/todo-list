@@ -9,3 +9,6 @@ createTaskBtn.addEventListener('click', () => {
     // Pop up modal and get info from user
     createTaskModal.showModal();
 });
+
+
+//console.log(format(new Date(2014, 1, 11), 'yyyy-MM-dd'));

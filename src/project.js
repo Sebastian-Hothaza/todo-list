@@ -22,7 +22,7 @@ const projectFactory = (title) => {
 
     // Returns single task object matching id 
     function getTask(id){
-        return tasks.find(item => item.getname() == id);
+        return tasks.find(item => item.uuid == id);
     }
 
     
