@@ -4,13 +4,11 @@ export { projectFactory, projects, inbox };
 const projects = [];
 
 // TODO: Some logic to ensure project name is unique
-
 const projectFactory = (title) => {
     let tasks = [];
+    projects.push(title);
 
-    function appendTask(task){
-        tasks.push(task);
-    }
+    function appendTask(task){ tasks.push(task); }
 
     function printTasks(){
         console.log(title + " has the following tasks: ");
@@ -19,14 +17,16 @@ const projectFactory = (title) => {
         }
     }
 
-    function getTasks(){
-        return tasks;
+    // Returns all tasks associated with that project
+    function getTasks(){ return tasks; }
+
+    // Returns single task object matching id 
+    function getTask(id){
+        return tasks.find(item => item.getname() == id);
     }
 
-
-
-    projects.push(title);
-    return { title, appendTask, printTasks, getTasks};
+    
+    return { title, appendTask, printTasks, getTasks, getTask};
 };
 
 const inbox = projectFactory('inbox');
