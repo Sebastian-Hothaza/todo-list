@@ -19,6 +19,24 @@ li{
     padding: 5px;
 }
 
+dialog{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+
+    /* NOTE: This is sloppy. Find a better way */
+    width: 300px;
+    height: 300px;
+
+    margin-left: -150px;
+    margin-top: -150px;
+
+}
+
+dialog::backdrop{
+    background: rgb(0,0,0,.2);
+}
+
 
 .main{
     display: grid;
@@ -94,3 +112,4 @@ li{
 .content{
     padding: 1em;
 }
+
