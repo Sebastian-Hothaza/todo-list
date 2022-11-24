@@ -73,6 +73,9 @@ function DOM_ListRangeTasks(tasks, range){
 
         const time_diff = dueDate.getTime()-new Date().getTime();
         const days_diff = time_diff / (1000 * 3600 * 24);
+        
+        // If we want items due today, we have to cut any that would extend to tmw (24H bug fix)
+        if (range == 1 && (dueDate.getDate() != new Date().getDate())) continue;
 
         if (days_diff <= range){
             const task = document.createElement('div');
