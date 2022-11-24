@@ -23,13 +23,14 @@ dialog{
     position: absolute;
     left: 50%;
     top: 50%;
+    padding: 15px;
 
     /* NOTE: This is sloppy. Find a better way */
-    /* width: 300px;
+    width: 300px;
     height: 300px;
 
     margin-left: -150px;
-    margin-top: -150px; */
+    margin-top: -150px;
 
 }
 
