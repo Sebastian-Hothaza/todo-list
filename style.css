@@ -15,9 +15,10 @@
 li{
     list-style: none;
     font-weight: 100;
-    margin-left: 1em;
+    margin-left: 1.3em;
     padding: 5px;
 }
+
 
 .main{
     display: grid;
@@ -51,10 +52,28 @@ li{
     gap: 20px;
     
     padding: 2em 1em;
+    color: var(--seconday-color);
+}
+
+.sidebar .selected{
+    color: black;
+    border: solid 1px blue;
+    /* text-decoration-line: underline; */
+}
+
+.sidebar>:nth-child(-n+4){
+    display: flex;
+    gap: 10px;
+    /* align-items: center; */
 }
 
 .sidebar>*:hover{
     cursor: pointer;
+}
+
+#projectsHeading{
+    border-top: dashed 2px;
+    padding-top: 1em;
 }
 
 #clearComplete{
@@ -69,4 +88,9 @@ li{
 
 #clearComplete:hover{
     transform: scale(1.05);
+}
+
+
+.content{
+    padding: 1em;
 }

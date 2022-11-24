@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDo List</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"/>
     <script src="main.js" defer></script>
 </head>
 <body>
@@ -13,18 +14,27 @@
         <div class="header">To-Do List</div>
 
         <div class="sidebar">
-            <div id="allTasks">All Tasks</div>
-            <div id="Today">Today</div>
-            <div id="thisWeek">This Week</div>
-            <ul id="projectsHeading">Projects
-                <li>Project1</li>
-                <li>Project2</li>
-                <li>Add Project</li>
+            <div class="selected" id="allTasks"><span class="material-icons"> home </span>All Tasks</div>
+            <div id="Today"><span class="material-icons"> today </span>Today</div>
+            <div id="thisWeek"><span class="material-icons"> date_range </span>This Week</div>
+            <div id="projectsHeading"><span class="material-icons"> list </span>Projects
+            </div>
+            <ul>
+                <li>+ Add Project</li>
             </ul>
             <button id="clearComplete">Clear Complete Tasks</button>
         </div>
 
-        <div class="content">CONTENT</div>
+        <div class="content">
+            <div id="taskList">
+                <!-- CONTENT INJECTED HERE IN JS -->
+            </div>
+            <div id="createTask">+ Create Task</div>
+            
+            <dialog id="modal">
+                <div>MODAL</div>
+            </dialog>
+        </div>
         <div class="footer">Copyright(c) Sebastian Hothaza</div>
     </div>
 </body>
