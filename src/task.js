@@ -5,12 +5,16 @@ const taskItemFactory = (title, date) => {
     function getName(){
         return title;
     }
-    function getDate(){
-        return date;
-    }
     function setName(newName){
         title = newName;
     }
-    return { uuid, getName, setName, getDate };
+    function getDate(){
+        return date;
+    }
+    function setDate(newDate){
+        date = newDate;
+    }
+
+    return { uuid, getName, setName, getDate, setDate};
 };
 

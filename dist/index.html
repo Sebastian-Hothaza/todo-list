@@ -15,8 +15,8 @@
 
         <div class="sidebar">
             <div class="selected" id="allTasks"><span class="material-icons"> home </span>All Tasks</div>
-            <div id="Today"><span class="material-icons"> today </span>Today</div>
-            <div id="thisWeek"><span class="material-icons"> date_range </span>This Week</div>
+            <div id="today"><span class="material-icons"> today </span>Today</div>
+            <div id="thisWeek"><span class="material-icons"> date_range </span>Next 7 Days</div>
             <div id="projectsHeading"><span class="material-icons"> list </span>Projects
             </div>
             <ul>
@@ -36,29 +36,21 @@
         <div class="footer">Copyright(c) Sebastian Hothaza</div>
     </div>
 
-    <dialog id="createTaskModal">
-        <div>Create your task</div>
+    <dialog id="modal" modalType="create">
+        <div id="heading">HEADING</div>
         <form method="dialog">
             <label for="title">Title</label>
             <input type="text" id="modalTitle" name="title">
+
             <label for="date">Due Date</label>
-            <input type="date" name="date" id="date">
-            <button>Cancel</button>
+            <input type="date" id="modalDate" name="date">
+
             <button type="submit" id="Confirm">Confirm</button>
-        </form>
-    </dialog>
-
-    <dialog id="editTaskModal">
-        <div>Edit your task</div>
-        <form method="dialog">
-            <label for="title">Title</label>
-            <input type="text" id="modalTitle" name="title">
             <button>Cancel</button>
-            <button id="Confirm">Confirm</button>
         </form>
     </dialog>
 
-    <!-- TODO: Can we combine into 1 modal and just change modal title accordingly? -->
+    
     
 </body>
 </html>
