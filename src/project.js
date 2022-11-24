@@ -1,4 +1,4 @@
-export { projectFactory, projects };
+export { projectFactory, projects, inbox };
 
 
 const projects = [];
@@ -8,7 +8,6 @@ const projects = [];
 const projectFactory = (title) => {
     let tasks = [];
 
-    
     function appendTask(task){
         tasks.push(task);
     }
@@ -29,6 +28,8 @@ const projectFactory = (title) => {
     projects.push(title);
     return { title, appendTask, printTasks, getTasks};
 };
+
+const inbox = projectFactory('inbox');
 
 
 
