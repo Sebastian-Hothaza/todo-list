@@ -113,3 +113,8 @@ dialog::backdrop{
     padding: 1em;
 }
 
+
+.task{
+    display: flex;
+    gap: 10px;
+}

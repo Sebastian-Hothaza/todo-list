@@ -19,7 +19,10 @@ createTaskModalConfirmBtn.addEventListener('click', () => {
 });
 
 editTaskModalConfirmBtn.addEventListener('click', () => {
-    // ???
+    inbox.getTask(editTaskModal.getAttribute('uniqueID')).setname(document.querySelector('#editTaskModal #modalTitle').value);
+    document.querySelector('#editTaskModal #modalTitle').value = ''; //TODO: wrap in a clear funtion
+    
+    DOM_ListTasks(inbox.getTasks());
 });
 
 
@@ -31,6 +34,7 @@ function DOM_ListTasks(tasks){
     // Loop thru array and list each task adding the edit listener
     for (let i=0; i<tasks.length; i++){
         const task = document.createElement('div');
+        task.classList.add('task');
         task.textContent = tasks[i].getname();
 
         const editBtn = document.createElement('button');
@@ -39,7 +43,8 @@ function DOM_ListTasks(tasks){
 
         editBtn.addEventListener('click', () => {
             editTaskModal.showModal();
-            // ???
+            // STORE html data attribute with unique ID
+            editTaskModal.setAttribute('uniqueID', tasks[i].getname());
         });
         taskList.appendChild(task);
     }
