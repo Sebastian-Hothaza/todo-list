@@ -19,9 +19,10 @@
             <div id="thisWeek"><span class="material-icons"> date_range </span>Next 7 Days</div>
             <div id="projectsHeading"><span class="material-icons"> list </span>Projects
             </div>
-            <ul>
-                <li>+ Add Project</li>
-            </ul>
+            <div id="projectList">
+                <!-- CONTENT INJECTED HERE IN JS -->
+            </div>
+            <div id="createProject" style="font-weight: 100; margin-left: 1.3em; padding: 5px;">+ Add Project</div>
             <button id="clearComplete">Clear Complete Tasks</button>
         </div>
 
@@ -44,6 +45,17 @@
 
             <label for="date">Due Date</label>
             <input type="date" id="modalDate" name="date">
+
+            <button type="submit" id="Confirm">Confirm</button>
+            <button>Cancel</button>
+        </form>
+    </dialog>
+
+    <dialog id="modalProject" modalType="create">
+        <div id="heading">HEADING</div>
+        <form method="dialog">
+            <label for="title">Title</label>
+            <input type="text" id="modalTitle" name="title">
 
             <button type="submit" id="Confirm">Confirm</button>
             <button>Cancel</button>
