@@ -2,7 +2,7 @@ import { taskItemFactory } from "./task";
 import { projectFactory, projects } from "./project";
 import { format } from 'date-fns';
 
-export {DOM_ListTasks, DOM_ListRangeTasks, DOM_Update, resetSelection}
+
 
 const modalConfirmBtn = document.querySelector('#modal #Confirm');
 const modalProjectConfirmBtn = document.querySelector('#modalProject #Confirm');
@@ -22,72 +22,33 @@ modalProjectConfirmBtn.addEventListener('click', () => {
     (modalProject.getAttribute('modalType') == 'create') ? createProject() : editProject();
 });
 
-// Given an array of tasks, lists them all on the page. Listeners added here too!
-function DOM_ListTasks(tasks){
+
+// Given an array of tasks, lists the valid tasks
+// range: -1 -> list all tasks
+// range:  1 -> list all tasks due the same day as today
+// range:  n -> list all tasks occuring over the next n days 
+function DOM_ListTasks(tasks, range){
     const taskList = document.querySelector('#taskList');
     
 
-    // Loop thru array and list each task adding the edit listener
-    for (let i=0; i<tasks.length; i++){
-        const task = document.createElement('div');
-        task.classList.add('task');
-        task.setAttribute('uuid', tasks[i].uuid);
-        task.textContent = tasks[i].getName();
-
-        const taskDate = document.createElement('div');
-        taskDate.classList.add('daaate');
-        taskDate.textContent = tasks[i].getDate();
-        task.appendChild(taskDate);
-
-        //EDIT
-        const editBtn = document.createElement('button');
-        editBtn.textContent = 'edit';
-        task.appendChild(editBtn);
-
-        editBtn.addEventListener('click', () => {
-            modal.setAttribute('modalType', 'edit');
-            
-            // STORE html data attribute with unique ID
-            modal.setAttribute('uuid', tasks[i].uuid);
-
-            // Set heading accordingly and pre-load fields with our tasks content
-            document.querySelector('#modal #heading').textContent = 'Edit task';
-            document.querySelector('#modal #modalTitle').value = tasks[i].getName();
-            document.querySelector('#modal #modalDate').value = tasks[i].getDate();
-
-
-            modal.showModal();
-        });
-
-
-        taskList.appendChild(task);
-    }
-
-}
-
-
-// Given an array of tasks, lists the ones due within the range (num days) 
-// Note: When given a range of 1, it will only list tasks with same duedate as today!
-function DOM_ListRangeTasks(tasks, range){
-    const taskList = document.querySelector('#taskList');
-    
-
-    // Loop thru array and list each task adding the edit listener
+    // Loop thru array and list each valid task adding the edit listener
     for (let i=0; i<tasks.length; i++){
         
         // Convert due date into a date object so we can work with it
         var parts = tasks[i].getDate().split('-');
         var dueDate = new Date(parts[0], parts[1] - 1, parts[2]); 
-        // Duedate is now in valid date obj form
+
+        // If we want items due today, we have to cut any that would extend to tmw (24H bug fix)
+        if (range == 1 && (dueDate.getDate() != new Date().getDate())) continue;
 
 
         const time_diff = dueDate.getTime()-new Date().getTime();
         const days_diff = time_diff / (1000 * 3600 * 24);
         
-        // If we want items due today, we have to cut any that would extend to tmw (24H bug fix)
-        if (range == 1 && (dueDate.getDate() != new Date().getDate())) continue;
+        
 
-        if (days_diff <= range){
+        // Criteria to display the task
+        if (range == -1 || days_diff <= range){
             const task = document.createElement('div');
             task.setAttribute('uuid', tasks[i].uuid);
             task.classList.add('task');
@@ -102,7 +63,6 @@ function DOM_ListRangeTasks(tasks, range){
             const editBtn = document.createElement('button');
             editBtn.textContent = 'edit';
             task.appendChild(editBtn);
-    
             editBtn.addEventListener('click', () => {
                 modal.setAttribute('modalType', 'edit');
                 
@@ -116,11 +76,22 @@ function DOM_ListRangeTasks(tasks, range){
     
     
                 modal.showModal();
-            });    
+            });  
+            
+            
+            //DELETE
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'delete';
+            task.appendChild(deleteBtn);
+            deleteBtn.addEventListener('click', () => {
+                removeTask(tasks[i].uuid);
+            });
+
+
+
+            // DONE building elements in the task container, now append it
             taskList.appendChild(task);
         }
-
-
     }
 }
 
@@ -160,6 +131,19 @@ function editTask(){
     resetModal();
 }
 
+// Removes a task
+function removeTask(id){
+     // Check each project to see where the task is located
+    for (let i=0; i<projects.length; i++){
+        if (projects[i].getTask(id) && id == projects[i].getTask(id).uuid){ // We check that the task exists AND then if the uuid match
+            // Remove the task in the corresponding project
+            projects[i].removeTask(id);
+            break;
+        }
+    }
+    DOM_Update();
+}
+
 // Updates DOM display
 function DOM_Update(){
     // Clearing can only happen here! If we clear in the DOM_ListTasks method, we lose ability to append
@@ -169,22 +153,22 @@ function DOM_Update(){
     if (document.querySelector('#allTasks').classList.contains('selected')){
         // We must print ALL tasks from ALL projects
         for (let i=0; i<projects.length; i++){
-            DOM_ListTasks(projects[i].getTasks());
+            DOM_ListTasks(projects[i].getTasks(),-1);
         }
         
     } else if (document.querySelector('#today').classList.contains('selected')) {
         // We must print ALL tasks from ALL projects that fit the criteria
         for (let i=0; i<projects.length; i++){
-            DOM_ListRangeTasks(projects[i].getTasks(),1);
+            DOM_ListTasks(projects[i].getTasks(),1);
         }
         
     } else if (document.querySelector('#thisWeek').classList.contains('selected')) {
         // We must print ALL tasks from ALL projects that fit the criteria
         for (let i=0; i<projects.length; i++){
-            DOM_ListRangeTasks(projects[i].getTasks(),7);
+            DOM_ListTasks(projects[i].getTasks(),7);
         }
     } else { //DOM updated for a project
-        DOM_ListTasks(workingProject.getTasks());
+        DOM_ListTasks(workingProject.getTasks(),-1);
     }
     
 }

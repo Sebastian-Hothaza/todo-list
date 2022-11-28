@@ -27,6 +27,10 @@ const projectFactory = (title) => {
         return tasks.find(item => item.uuid == id);
     }
 
+    function removeTask(id){
+        tasks = tasks.filter(task => task.uuid != id); 
+    }
+
     function getName(){
         return title;
     }
@@ -40,7 +44,7 @@ const projectFactory = (title) => {
     }
 
     
-    return { uuid, appendTask, printTasks, getTasks, getTask, getName, setName, addSelf};
+    return { uuid, appendTask, printTasks, getTasks, getTask, getName, setName, addSelf, removeTask};
 };
 
 const inbox = projectFactory('inbox');
