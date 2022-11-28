@@ -247,7 +247,26 @@ function DOM_ListProjects(){
             modalProject.showModal();
         });
 
+        //DELETE
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'delete';
+        project.appendChild(deleteBtn);
 
+        deleteBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // We need to stop propagation here!
+
+            //Projects cannot be modified here! It is read only since imported
+            projects[i].removeProject(projects[i].uuid);
+
+            resetSelection();
+            allTasksBtn.classList.add('selected');
+            workingProject = projects[0];
+            
+            DOM_ListProjects();
+            DOM_Update();
+        });
+
+        // DONE building elements in the project container, now append it
         DOM_ProjectList.appendChild(project);
     }
 }

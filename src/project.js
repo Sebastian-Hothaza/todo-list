@@ -31,6 +31,10 @@ const projectFactory = (title) => {
         tasks = tasks.filter(task => task.uuid != id); 
     }
 
+    function removeProject(id){
+        projects = projects.filter(proj => proj.uuid != id); 
+    }
+
     function getName(){
         return title;
     }
@@ -44,7 +48,7 @@ const projectFactory = (title) => {
     }
 
     
-    return { uuid, appendTask, printTasks, getTasks, getTask, getName, setName, addSelf, removeTask};
+    return { uuid, appendTask, printTasks, getTasks, getTask, getName, setName, addSelf, removeTask, removeProject};
 };
 
 const inbox = projectFactory('inbox');
