@@ -1,12 +1,14 @@
 export { projectFactory, projects, inbox };
 
 
-const projects = [];
+let projects = [];
 
-// TODO: Some logic to ensure project name is unique
+// TODO: Some logic to ensure project name is unique. This logic possibly will not reside here
 const projectFactory = (title) => {
+    let uuid = self.crypto.randomUUID();
     let tasks = [];
-    projects.push(title);
+
+    
 
     function appendTask(task){ tasks.push(task); }
 
@@ -25,11 +27,24 @@ const projectFactory = (title) => {
         return tasks.find(item => item.uuid == id);
     }
 
+    function getName(){
+        return title;
+    }
+
+    function setName(newTitle){
+        title = newTitle;
+    }
+
+    function addSelf(){
+        projects.push(this);
+    }
+
     
-    return { title, appendTask, printTasks, getTasks, getTask};
+    return { uuid, appendTask, printTasks, getTasks, getTask, getName, setName, addSelf};
 };
 
 const inbox = projectFactory('inbox');
+inbox.addSelf();
 
 
 
