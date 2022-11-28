@@ -10,6 +10,7 @@ const modalProjectConfirmBtn = document.querySelector('#modalProject #Confirm');
 const allTasksBtn = document.querySelector('#allTasks');
 const todayBtn = document.querySelector('#today');
 const thisWeekBtn = document.querySelector('#thisWeek');
+const clearCompleteBtn = document.querySelector('#clearComplete');
 
 // This tracks where new tasks should be placed. Starts off with being "inbox"
 let workingProject = projects[0]; 
@@ -22,6 +23,42 @@ modalProjectConfirmBtn.addEventListener('click', () => {
     (modalProject.getAttribute('modalType') == 'create') ? createProject() : editProject();
 });
 
+allTasksBtn.addEventListener('click', () => {
+    // CSS styling
+    resetSelection();
+    allTasksBtn.classList.add('selected');
+    workingProject = projects[0];
+    DOM_Update();
+});
+
+todayBtn.addEventListener('click', () => {
+    // CSS styling
+    resetSelection();
+    todayBtn.classList.add('selected');
+    workingProject = projects[0];
+    DOM_Update();
+});
+
+thisWeekBtn.addEventListener('click', () => {
+    // CSS styling
+    resetSelection();
+    thisWeekBtn.classList.add('selected');
+    workingProject = projects[0];
+    DOM_Update();
+});
+
+clearCompleteBtn.addEventListener('click', () => {
+    // Go through all projects and only keep those who are not marked complete
+    for (let i=0; i<projects.length; i++){
+        // Go through each task in the project
+        for (let j=0; j<projects[i].getTasks().length; j++){
+            if (projects[i].getTasks()[j].isComplete()){
+                projects[i].removeTask(projects[i].getTasks()[j].uuid);
+                DOM_Update();
+            }
+        }
+    }
+});
 
 // Given an array of tasks, lists the valid tasks
 // range: -1 -> list all tasks
@@ -147,7 +184,7 @@ function editTask(){
     resetModal();
 }
 
-// Removes a task
+// Removes a task by uuid
 function removeTask(id){
      // Check each project to see where the task is located
     for (let i=0; i<projects.length; i++){
@@ -287,30 +324,7 @@ function DOM_ListProjects(){
     }
 }
 
-// Note: we leave clearing of the page to the individual display function
-allTasksBtn.addEventListener('click', () => {
-    // CSS styling
-    resetSelection();
-    allTasksBtn.classList.add('selected');
-    workingProject = projects[0];
-    DOM_Update();
-});
 
-todayBtn.addEventListener('click', () => {
-    // CSS styling
-    resetSelection();
-    todayBtn.classList.add('selected');
-    workingProject = projects[0];
-    DOM_Update();
-});
-
-thisWeekBtn.addEventListener('click', () => {
-    // CSS styling
-    resetSelection();
-    thisWeekBtn.classList.add('selected');
-    workingProject = projects[0];
-    DOM_Update();
-});
 
 // Resets all fields in the modal
 function resetModal(){
