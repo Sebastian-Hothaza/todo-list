@@ -126,3 +126,7 @@ dialog::backdrop{
     gap: 10px;
 }
 
+.taskComplete{
+    color: green;
+}
+

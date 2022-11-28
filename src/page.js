@@ -53,6 +53,13 @@ function DOM_ListTasks(tasks, range){
             task.setAttribute('uuid', tasks[i].uuid);
             task.classList.add('task');
             task.textContent = tasks[i].getName();
+
+            // Add or remove the isComplete CSS tag
+            if (tasks[i].isComplete()){
+                task.classList.add('taskComplete');
+            }else{
+                task.classList.remove('taskComplete');
+            }
     
             const taskDate = document.createElement('div');
             taskDate.classList.add('daaate');
@@ -85,6 +92,15 @@ function DOM_ListTasks(tasks, range){
             task.appendChild(deleteBtn);
             deleteBtn.addEventListener('click', () => {
                 removeTask(tasks[i].uuid);
+            });
+
+            //COMPLETE
+            const toggleCompleteBtn = document.createElement('button');
+            toggleCompleteBtn.textContent = 'Completed';
+            task.appendChild(toggleCompleteBtn);
+            toggleCompleteBtn.addEventListener('click', () => {
+                tasks[i].toggleComplete();
+                DOM_Update();
             });
 
 

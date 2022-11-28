@@ -12,12 +12,6 @@ const projectFactory = (title) => {
 
     function appendTask(task){ tasks.push(task); }
 
-    function printTasks(){
-        console.log(title + " has the following tasks: ");
-        for (let i=0; i<tasks.length; i++){
-            console.log("--"+tasks[i].getname());
-        }
-    }
 
     // Returns all tasks associated with that project
     function getTasks(){ return tasks; }
@@ -48,7 +42,7 @@ const projectFactory = (title) => {
     }
 
     
-    return { uuid, appendTask, printTasks, getTasks, getTask, getName, setName, addSelf, removeTask, removeProject};
+    return { uuid, appendTask, getTasks, getTask, getName, setName, addSelf, removeTask, removeProject};
 };
 
 const inbox = projectFactory('inbox');
