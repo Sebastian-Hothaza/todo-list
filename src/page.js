@@ -1,8 +1,6 @@
 import { taskItemFactory } from "./task";
-import { projectFactory, projects, inbox } from "./project";
+import { projectFactory, projects } from "./project";
 import { format } from 'date-fns';
-
-// ISSUE: Cannot edit a task in a project UNLESS that current project is selected!
 
 export {DOM_ListTasks, DOM_ListRangeTasks, DOM_Update, resetSelection}
 
@@ -27,7 +25,7 @@ modalProjectConfirmBtn.addEventListener('click', () => {
 // Given an array of tasks, lists them all on the page. Listeners added here too!
 function DOM_ListTasks(tasks){
     const taskList = document.querySelector('#taskList');
-    // taskList.innerHTML = ''; CANT DO THIS HERE! Or we lose ability to append!
+    
 
     // Loop thru array and list each task adding the edit listener
     for (let i=0; i<tasks.length; i++){
@@ -50,7 +48,7 @@ function DOM_ListTasks(tasks){
             modal.setAttribute('modalType', 'edit');
             
             // STORE html data attribute with unique ID
-            modal.setAttribute('uniqueID', tasks[i].uuid);
+            modal.setAttribute('uuid', tasks[i].uuid);
 
             // Set heading accordingly and pre-load fields with our tasks content
             document.querySelector('#modal #heading').textContent = 'Edit task';
@@ -68,11 +66,11 @@ function DOM_ListTasks(tasks){
 }
 
 
-// Given an array of tasks, lists the ones due within the range. 
+// Given an array of tasks, lists the ones due within the range (num days) 
 // Note: When given a range of 1, it will only list tasks with same duedate as today!
 function DOM_ListRangeTasks(tasks, range){
     const taskList = document.querySelector('#taskList');
-    // taskList.innerHTML = ''; CANT DO THIS HERE! Or we lose ability to append!
+    
 
     // Loop thru array and list each task adding the edit listener
     for (let i=0; i<tasks.length; i++){
@@ -109,7 +107,7 @@ function DOM_ListRangeTasks(tasks, range){
                 modal.setAttribute('modalType', 'edit');
                 
                 // STORE html data attribute with unique ID
-                modal.setAttribute('uniqueID', tasks[i].uuid);
+                modal.setAttribute('uuid', tasks[i].uuid);
     
                 // Set heading accordingly and pre-load fields with our tasks content
                 document.querySelector('#modal #heading').textContent = 'Edit task';
@@ -128,9 +126,6 @@ function DOM_ListRangeTasks(tasks, range){
 
 // Creates a task using info from modal for a project
 function createTask(project){
-    //console.log("createTask called");
-    //console.log(project.getName()); 
-
     // Fetch data from modal
     const title = document.querySelector('#modal #modalTitle').value;
     const date = document.querySelector('#modal #modalDate').value;
@@ -138,7 +133,7 @@ function createTask(project){
     // Create task object
     const newTask = taskItemFactory(title, date);
 
-    // Append the newly created object to the inbox
+    // Append the newly created object to the project
     project.appendTask(newTask);
 
     DOM_Update();
@@ -149,9 +144,10 @@ function createTask(project){
 function editTask(){
     let task;
      // Check each project to search for the task we want to edit
+     // The edit modal is marked with the uuid of the task we want to edit
     for (let i=0; i<projects.length; i++){
-        if (projects[i].getTask(modal.getAttribute('uniqueID'))){ // Returns a task object, else undefined
-            task = projects[i].getTask(modal.getAttribute('uniqueID'));
+        if (projects[i].getTask(modal.getAttribute('uuid'))){ // Returns a task object, else undefined
+            task = projects[i].getTask(modal.getAttribute('uuid'));
             break;
         }
     }
@@ -164,8 +160,7 @@ function editTask(){
     resetModal();
 }
 
-// Updates DOM display (Optional: with a specified project)
-// Needs to know which DOM is 'selected'
+// Updates DOM display
 function DOM_Update(){
     // Clearing can only happen here! If we clear in the DOM_ListTasks method, we lose ability to append
     document.querySelector('#taskList').innerHTML = '';
@@ -189,7 +184,7 @@ function DOM_Update(){
             DOM_ListRangeTasks(projects[i].getTasks(),7);
         }
     } else { //DOM updated for a project
-        DOM_ListTasks(getActiveProject().getTasks());
+        DOM_ListTasks(workingProject.getTasks());
     }
     
 }
@@ -213,7 +208,7 @@ function createProject(){
 // Updates a task using info from modal
 function editProject(){
     // Get the project we want to edit
-    const project = projects.find(item => item.uuid == modalProject.getAttribute('uniqueID'));;
+    const project = projects.find(item => item.uuid == modalProject.getAttribute('uuid'));;
 
     // Update the project with the new params
     project.setName(document.querySelector('#modalProject #modalTitle').value);
@@ -258,7 +253,7 @@ function DOM_ListProjects(){
             modalProject.setAttribute('modalType', 'edit');
             
             // STORE html data attribute with unique ID
-            modalProject.setAttribute('uniqueID', projects[i].uuid);
+            modalProject.setAttribute('uuid', projects[i].uuid);
 
             // Set heading accordingly and pre-load fields with our projects content
             document.querySelector('#modalProject #heading').textContent = 'Edit project';
@@ -309,7 +304,6 @@ function resetModalProject(){
     document.querySelector('#modalProject #modalTitle').value = '';
 }
 
-
 // Clears "selected" tag on all elements
 function resetSelection(){
     // Clear top 3
@@ -317,29 +311,9 @@ function resetSelection(){
     document.querySelector('#today').classList.remove('selected');
     document.querySelector('#thisWeek').classList.remove('selected');
 
-    // Clear projects
-    const allProjects = document.querySelectorAll('li');
-
-    allProjects.forEach((item) => {
+    // Clear custom projects
+    document.querySelectorAll('li').forEach((item) => {
         item.classList.remove('selected');
     });
 }
 
-// Queries the DOM on what the currently selected project is and returns project
-function getActiveProject(){
-    if (document.querySelector('#allTasks').classList.contains('selected')){
-        return projects[0];
-    }
-
-    // Active project is a user created project! Find it and return it
-    for (let item of document.querySelectorAll('li')){
-        if (item.classList.contains('selected')){
-            // Go through projects array, find matching project UUID and return it
-            for (let i=0; i<projects.length; i++){
-                if (item.getAttribute('uuid') == projects[i].uuid){
-                    return projects[i];
-                }
-            }
-        }
-    }
-}
