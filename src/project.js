@@ -1,9 +1,10 @@
-export { projectFactory, projects, inbox };
-
+export { createProject, editProject, projectFactory, projects, inbox };
+import { LS_addProject } from "./localStorage"
 
 let projects = [];
 
-// TODO: Some logic to ensure project name is unique. This logic possibly will not reside here
+// Todo: Why arent we exporting delete Project?
+
 const projectFactory = (title) => {
     let uuid = self.crypto.randomUUID();
     let tasks = [];
@@ -50,6 +51,31 @@ const projectFactory = (title) => {
 const inbox = projectFactory('inbox');
 inbox.addSelf();
 
+// Creates a project using info from modal
+function createProject(){
+    // Fetch data from modal
+    const title = document.querySelector('#modalProject #modalTitle').value;
 
+    // Create new project object and add it to the projects array
+    const newProject = projectFactory(title);
+    newProject.addSelf();
 
+    // Append the newly created project to localStorage. 
+    LS_addProject(newProject);
 
+    
+
+    // Make the freshly created project the center of attention!
+    // workingProject = newProject; TODO; move out to page?
+
+    
+}
+
+// Updates a project using info from modal
+function editProject(){
+    // Get the project we want to edit
+    const project = projects.find(item => item.uuid == modalProject.getAttribute('uuid'));;
+
+    // Update the project with the new params
+    project.setName(document.querySelector('#modalProject #modalTitle').value);
+}

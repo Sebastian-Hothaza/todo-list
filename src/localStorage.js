@@ -1,8 +1,6 @@
 export { LS_addTask, LS_addProject, LS_load }
-
 import { inbox, projectFactory } from "./project"
 import { taskItemFactory } from "./task";
-import { DOM_Update, DOM_ListProjects } from "./page"
 
 
 // Adds task object to existing project
@@ -76,6 +74,5 @@ function LS_load(){
             
         }
     }
-    DOM_ListProjects();
-    DOM_Update();
+    
 }

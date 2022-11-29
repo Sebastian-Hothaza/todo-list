@@ -1,31 +1,36 @@
-import { taskItemFactory } from "./task";
-import { inbox, projectFactory, projects } from "./project";
-import { format } from 'date-fns';
-import { LS_addTask, LS_addProject } from "./localStorage"
-
 export { DOM_Update, DOM_ListProjects }
+import { createTask, editTask, removeTask } from "./task";
+import { createProject, editProject, projects } from "./project";
+import { format } from 'date-fns';
 
+let workingProject = projects[0]; 
 
-
+// -----------------------------   MODAL BUTTONS   -----------------------------
 const modalConfirmBtn = document.querySelector('#modal #Confirm');
 const modalProjectConfirmBtn = document.querySelector('#modalProject #Confirm');
 
+modalConfirmBtn.addEventListener('click', () => {
+    (modal.getAttribute('modalType') == 'create') ? createTask(workingProject) : editTask();
+    DOM_Update();
+    resetModal();
+});
+
+modalProjectConfirmBtn.addEventListener('click', () => {
+    (modalProject.getAttribute('modalType') == 'create') ? createProject() : editProject();
+    workingProject = projects[projects.length - 1];
+    DOM_ListProjects();
+    DOM_Update();
+    resetModalProject();
+});
+// -----------------------------------------------------------------------------
+
+
+// -----------------------------   MENU BUTTONS   -----------------------------
 const allTasksBtn = document.querySelector('#allTasks');
 const todayBtn = document.querySelector('#today');
 const thisWeekBtn = document.querySelector('#thisWeek');
 const clearCompleteBtn = document.querySelector('#clearComplete');
 const resetStorageBtn = document.querySelector('#resetStorage');
-
-// This tracks where new tasks should be placed. Starts off with being "inbox"
-let workingProject = projects[0]; 
-
-modalConfirmBtn.addEventListener('click', () => {
-    (modal.getAttribute('modalType') == 'create') ? createTask(workingProject) : editTask();
-});
-
-modalProjectConfirmBtn.addEventListener('click', () => {
-    (modalProject.getAttribute('modalType') == 'create') ? createProject() : editProject();
-});
 
 allTasksBtn.addEventListener('click', () => {
     // CSS styling
@@ -69,11 +74,41 @@ resetStorageBtn.addEventListener('click', () => {
     localStorage.clear();
     location.reload();
 });
+// -----------------------------------------------------------------------------
+
+// Updates DOM display 
+function DOM_Update(){
+    // Clearing can only happen here! If we clear in the DOM_ListTasks method, we lose ability to append
+    document.querySelector('#taskList').innerHTML = '';
+    //console.log("cleared the DOM");
+
+    if (document.querySelector('#allTasks').classList.contains('selected')){
+        // We must print ALL tasks from ALL projects
+        for (let i=0; i<projects.length; i++){
+            DOM_ListTasks(projects[i].getTasks(),-1);
+        }
+        
+    } else if (document.querySelector('#today').classList.contains('selected')) {
+        // We must print ALL tasks from ALL projects that fit the criteria
+        for (let i=0; i<projects.length; i++){
+            DOM_ListTasks(projects[i].getTasks(),1);
+        }
+        
+    } else if (document.querySelector('#thisWeek').classList.contains('selected')) {
+        // We must print ALL tasks from ALL projects that fit the criteria
+        for (let i=0; i<projects.length; i++){
+            DOM_ListTasks(projects[i].getTasks(),7);
+        }
+    } else { //DOM updated for a project
+        DOM_ListTasks(workingProject.getTasks(),-1);
+    }
+    
+}
 
 // Given an array of tasks, lists the valid tasks
-// range: -1 -> list all tasks
-// range:  1 -> list all tasks due the same day as today
-// range:  n -> list all tasks occuring over the next n days 
+// range:-1 -> list all tasks
+// range: 1 -> list all tasks due today
+// range: n -> list all tasks occuring over the next n days 
 function DOM_ListTasks(tasks, range){
     const taskList = document.querySelector('#taskList');
     
@@ -139,7 +174,9 @@ function DOM_ListTasks(tasks, range){
             task.appendChild(deleteBtn);
             deleteBtn.addEventListener('click', () => {
                 removeTask(tasks[i].uuid);
+                DOM_Update();
             });
+            
 
             //COMPLETE
             const toggleCompleteBtn = document.createElement('button');
@@ -158,120 +195,6 @@ function DOM_ListTasks(tasks, range){
     }
 }
 
-// Creates a task using info from modal for a project
-function createTask(project){
-    // Fetch data from modal
-    const title = document.querySelector('#modal #modalTitle').value;
-    const date = document.querySelector('#modal #modalDate').value;
-
-    // Create task object
-    const newTask = taskItemFactory(title, date);
-
-    // Append the newly created task to localStorage. 
-    LS_addTask(project, newTask);
-
-    // Append the newly created object to the project
-    project.appendTask(newTask);
-
-    DOM_Update();
-    resetModal();
-}
-
-// Updates a task using info from modal for a project
-function editTask(){
-    let task;
-     // Check each project to search for the task we want to edit
-     // The edit modal is marked with the uuid of the task we want to edit
-    for (let i=0; i<projects.length; i++){
-        if (projects[i].getTask(modal.getAttribute('uuid'))){ // Returns a task object, else undefined
-            task = projects[i].getTask(modal.getAttribute('uuid'));
-            break;
-        }
-    }
-
-    // Update the task with the new params
-    task.setName(document.querySelector('#modal #modalTitle').value);
-    task.setDate(document.querySelector('#modal #modalDate').value);
-
-    DOM_Update();
-    resetModal();
-}
-
-// Removes a task by uuid
-function removeTask(id){
-     // Check each project to see where the task is located
-    for (let i=0; i<projects.length; i++){
-        if (projects[i].getTask(id) && id == projects[i].getTask(id).uuid){ // We check that the task exists AND then if the uuid match
-            // Remove the task in the corresponding project
-            projects[i].removeTask(id);
-            break;
-        }
-    }
-    DOM_Update();
-}
-
-// Updates DOM display
-function DOM_Update(){
-    // Clearing can only happen here! If we clear in the DOM_ListTasks method, we lose ability to append
-    document.querySelector('#taskList').innerHTML = '';
-    //console.log("cleared the DOM");
-
-    if (document.querySelector('#allTasks').classList.contains('selected')){
-        // We must print ALL tasks from ALL projects
-        for (let i=0; i<projects.length; i++){
-            DOM_ListTasks(projects[i].getTasks(),-1);
-        }
-        
-    } else if (document.querySelector('#today').classList.contains('selected')) {
-        // We must print ALL tasks from ALL projects that fit the criteria
-        for (let i=0; i<projects.length; i++){
-            DOM_ListTasks(projects[i].getTasks(),1);
-        }
-        
-    } else if (document.querySelector('#thisWeek').classList.contains('selected')) {
-        // We must print ALL tasks from ALL projects that fit the criteria
-        for (let i=0; i<projects.length; i++){
-            DOM_ListTasks(projects[i].getTasks(),7);
-        }
-    } else { //DOM updated for a project
-        DOM_ListTasks(workingProject.getTasks(),-1);
-    }
-    
-}
-
-function createProject(){
-    // Fetch data from modal
-    const title = document.querySelector('#modalProject #modalTitle').value;
-
-    // Create new project object and add it to the projects array
-    const newProject = projectFactory(title);
-    newProject.addSelf();
-
-    // Append the newly created project to localStorage. 
-    LS_addProject(newProject);
-
-    
-
-    // Make the freshly created project the center of attention!
-    workingProject = newProject;
-
-    DOM_ListProjects();
-    DOM_Update();
-    resetModalProject();
-}
-
-// Updates a task using info from modal
-function editProject(){
-    // Get the project we want to edit
-    const project = projects.find(item => item.uuid == modalProject.getAttribute('uuid'));;
-
-    // Update the project with the new params
-    project.setName(document.querySelector('#modalProject #modalTitle').value);
-
-    DOM_ListProjects();
-    resetModalProject();
-}
-
 // Update sidebar DOM based on projects[]
 function DOM_ListProjects(){
     const DOM_ProjectList = document.querySelector('#projectList');
@@ -283,6 +206,7 @@ function DOM_ListProjects(){
         project.innerText = projects[i].getName();
         project.setAttribute('uuid', projects[i].uuid);
 
+        // CSS Styling
         if (workingProject == projects[i]) {
             resetSelection();
             project.classList.add('selected');
@@ -294,7 +218,6 @@ function DOM_ListProjects(){
             resetSelection();
             project.classList.add('selected');
             workingProject = projects[i];
-            //console.log("working project set to: "+workingProject.getName());
             DOM_Update();
         });
         
@@ -342,8 +265,6 @@ function DOM_ListProjects(){
     }
 }
 
-
-
 // Resets all fields in the modal
 function resetModal(){
     document.querySelector('#modal #modalTitle').value = '';
@@ -367,4 +288,3 @@ function resetSelection(){
         item.classList.remove('selected');
     });
 }
-
