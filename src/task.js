@@ -1,5 +1,5 @@
 export { createTask, editTask, removeTask, taskItemFactory }
-import { LS_addTask } from "./localStorage"
+import { LS_addTask, LS_editTask } from "./localStorage"
 import { projects } from "./project";
 
 
@@ -30,9 +30,10 @@ const taskItemFactory = (title, date) => {
         }else{
             taskComplete = true;
         }
+        
     }
 
-    return { uuid, title, date, getName, setName, getDate, setDate, isComplete, toggleComplete};
+    return { uuid, title, date, taskComplete, getName, setName, getDate, setDate, isComplete, toggleComplete};
 };
 
 // Creates a task using info from modal for a project
@@ -54,11 +55,13 @@ function createTask(project){
 // Updates a task using info from modal for a project
 function editTask(){
     let task;
+    let project;
      // Check each project to search for the task we want to edit
      // The edit modal is marked with the uuid of the task we want to edit
     for (let i=0; i<projects.length; i++){
         if (projects[i].getTask(modal.getAttribute('uuid'))){ // Returns a task object, else undefined
             task = projects[i].getTask(modal.getAttribute('uuid'));
+            project = projects[i];
             break;
         }
     }
@@ -67,6 +70,9 @@ function editTask(){
     task.setName(document.querySelector('#modal #modalTitle').value);
     task.setDate(document.querySelector('#modal #modalDate').value);
 
+
+    // Update edited task to localStorage. 
+    LS_editTask(project, task);
  
 }
 

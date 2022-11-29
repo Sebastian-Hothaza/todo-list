@@ -1,9 +1,9 @@
-export { LS_addTask, LS_addProject, LS_load }
+export { LS_addTask, LS_editTask, LS_addProject, LS_load }
 import { inbox, projectFactory } from "./project"
 import { taskItemFactory } from "./task";
 
 
-// Adds task object to existing project
+// Adds task object to existing project.
 function LS_addTask(project, task){
     // We differentiate between inbox and custom project tasks
     if (project == inbox){
@@ -75,4 +75,38 @@ function LS_load(){
         }
     }
     
+}
+
+// Updates the LS in a project with given task containing updated info
+function LS_editTask(project, task){
+    let startingIdx;
+    let projectKey;
+    
+    if (project == inbox){
+        startingIdx = 0;
+        projectKey = "inbox";
+    }else{
+        startingIdx = 1;
+        projectKey = project.uuid;
+    }
+    
+    let fetchedArray = JSON.parse(localStorage.getItem(projectKey));
+    
+    // go through array of tasks in the project until find matching ID, then update that task
+    console.log(fetchedArray);
+    for ( ; startingIdx<fetchedArray.length; startingIdx++){
+        if (fetchedArray[startingIdx].uuid == task.uuid){
+
+            // Update the task here!
+            fetchedArray[startingIdx].title = task.getName();
+            fetchedArray[startingIdx].date = task.getDate();
+            //fetchedArray[startingIdx].isComplete = task.isComplete();
+            
+
+
+
+            // Finally, set the item in LS
+            localStorage.setItem(projectKey, JSON.stringify(fetchedArray));
+        }
+    }
 }
