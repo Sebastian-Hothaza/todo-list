@@ -44,7 +44,7 @@ const projectFactory = (title) => {
     }
 
     
-    return { uuid, appendTask, getTasks, getTask, getName, setName, addSelf, removeTask, removeProject};
+    return { uuid, title, appendTask, getTasks, getTask, getName, setName, addSelf, removeTask, removeProject};
 };
 
 const inbox = projectFactory('inbox');
