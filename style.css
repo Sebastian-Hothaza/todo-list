@@ -111,7 +111,16 @@ dialog::backdrop{
     transition: transform .3s;
 }
 
-#clearComplete:hover{
+#resetStorage{
+    color: var(--background-color);
+    background-color: blue;
+    font-size: 18px;
+    border: 2px solid black;
+    padding: .2em .5em;
+    transition: transform .3s;
+}
+
+#clearComplete:hover, #resetStorage:hover{
     transform: scale(1.05);
 }
 
