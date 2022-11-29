@@ -135,10 +135,6 @@ function DOM_ListTasks(tasks, range){
             task.setAttribute('uuid', tasks[i].uuid);
             task.classList.add('task');
             task.textContent = tasks[i].getName();
-
-            console.log("Checking if task is complete: "+tasks[i].isComplete());
-            console.log("task uuid: "+ tasks[i].uuid);
-            console.log("task name: "+ tasks[i].getName());
             
             // Add or remove the isComplete CSS tag
             if (tasks[i].isComplete()){
@@ -177,7 +173,7 @@ function DOM_ListTasks(tasks, range){
             deleteBtn.textContent = 'delete';
             task.appendChild(deleteBtn);
             deleteBtn.addEventListener('click', () => {
-                removeTask(tasks[i].uuid);
+                removeTask(tasks[i]);
                 DOM_Update();
             });
             

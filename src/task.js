@@ -1,5 +1,5 @@
 export { createTask, editTask, removeTask, toggleCompleteTask, taskItemFactory }
-import { LS_addTask, LS_editTask } from "./localStorage"
+import { LS_addTask, LS_editTask, LS_removeTask } from "./localStorage"
 import { projects } from "./project";
 
 
@@ -84,15 +84,19 @@ function editTask(){
 }
 
 // Removes a task by uuid from project
-function removeTask(id){
+function removeTask(task){
+    let project;
     // Check each project to see where the task is located
    for (let i=0; i<projects.length; i++){
-       if (projects[i].getTask(id) && id == projects[i].getTask(id).uuid){ // We check that the task exists AND then if the uuid match
+       if (projects[i].getTask(task.uuid) && task.uuid == projects[i].getTask(task.uuid).uuid){ // We check that the task exists AND then if the uuid match
            // Remove the task in the corresponding project
-           projects[i].removeTask(id);
+           projects[i].removeTask(task.uuid);
+           project = projects[i];
            break;
        }
    }
+    // Remove task from localStorage. 
+    LS_removeTask(project, task);
 }
 
 // Toggles a task as complete
