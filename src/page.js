@@ -1,8 +1,9 @@
 import { taskItemFactory } from "./task";
 import { inbox, projectFactory, projects } from "./project";
 import { format } from 'date-fns';
+import { LS_addTask, LS_addProject } from "./localStorage"
 
-export { LS_loadTasks, LS_loadTasks2 }
+export { DOM_Update, DOM_ListProjects }
 
 
 
@@ -249,6 +250,8 @@ function createProject(){
     // Append the newly created project to localStorage. 
     LS_addProject(newProject);
 
+    
+
     // Make the freshly created project the center of attention!
     workingProject = newProject;
 
@@ -365,71 +368,3 @@ function resetSelection(){
     });
 }
 
-// Adds task object to project (append)
-function LS_addTask(project, task){
-    let fetchedArray = JSON.parse(localStorage.getItem(project.getName()) || "[]");
-    fetchedArray.push(task);
-    localStorage.setItem(project.getName(), JSON.stringify(fetchedArray));
-}
-
-function LS_addProject(project){
-    console.log("Adding project to LS: "+project.getName());
-    let arr = [project];
-    localStorage.setItem(project.getName(), JSON.stringify(arr));
-}
-
-// loads tasks from LS into the inbox
-function LS_loadTasks(){
-    let tasks = JSON.parse(localStorage.getItem("inbox"));
-    for (let i=0; i<tasks.length; i++){
-        let loadedTask = taskItemFactory(tasks[i].title, tasks[i].date);
-        loadedTask.uuid = tasks[i].uuid; // Assures uuid is preserved. Does this even really matter? Try commenting it out later.
-        
-        // Append the newly loaded object to the project
-        inbox.appendTask(loadedTask);
-    }
-    DOM_Update();
-}
-
-// Loads projects and tasks
-
-/*
-In inbox, [0] is task item 1 vs in custom projects [1] is task item 1!
-*/
-
-function LS_loadTasks2(){ //NOTE: INBOX not always at 0!
-    // Go through all of the LS
-    for (let i=0; i<localStorage.length; i++){  
-        let targetProject = inbox; // This will track where we want to load the tasks into
-        if (localStorage.key(i) != "inbox"){ // Loading a user project 
-            
-
-            // NOTE: User project title is key(i)
-            // Load new project object and add it to the projects array
-            targetProject = projectFactory(localStorage.key(i));
-            targetProject.uuid = JSON.parse(localStorage.getItem(localStorage.key(i)))[0].uuid;
-            targetProject.addSelf();
-            console.log("finished loading in the project "+targetProject.getName());
-        }
-        
-        // Load in the tasks for the selected project
-        let tasks = JSON.parse(localStorage.getItem(localStorage.key(i)));
-        console.log("start loading tasks for project "+targetProject.getName());
-            for (let j=0; j<tasks.length; j++){
-                // Since with custom projects, tasks[0] contains the project name, we need to skip it
-                if (j==0 && localStorage.key(i) != "inbox") {
-                    console.log("--detected that j==0 and we are on custom project, so we are skipping it");
-                    continue;
-                }
-                console.log("--building new task: "+tasks[j].title);
-                let loadedTask = taskItemFactory(tasks[j].title, tasks[j].date);
-                loadedTask.uuid = tasks[j].uuid; 
-                
-                // Append the newly loaded object to the targetProject
-                targetProject.appendTask(loadedTask);
-            }
-    }
-    DOM_ListProjects();
-    DOM_Update();
-
-}

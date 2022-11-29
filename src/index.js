@@ -1,5 +1,5 @@
 import "./page";
-import {LS_loadTasks, LS_loadTasks2} from "./page"
+import { LS_load } from "./localStorage"
 
 const createTaskBtn = document.querySelector('#createTask');
 const createProjectBtn = document.querySelector('#createProject');
@@ -9,7 +9,7 @@ const modalProject = document.querySelector('#modalProject');
 // Check local storage
 if (localStorage.length){
     console.log('LS is populated!');
-    LS_loadTasks2();
+    LS_load();
 }
 
 
