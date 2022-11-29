@@ -1,5 +1,5 @@
 export { createProject, editProject, removeProject, projectFactory, projects, inbox };
-import { LS_addProject } from "./localStorage"
+import { LS_addProject, LS_editProject, LS_removeProject } from "./localStorage"
 
 let projects = [];
 
@@ -74,8 +74,12 @@ function editProject(){
 
     // Update the project with the new params
     project.setName(document.querySelector('#modalProject #modalTitle').value);
+
+    // Update edited project to localStorage. 
+    LS_editProject(project);
 }
 
-function removeProject(id){
-    projects = projects.filter(proj => proj.uuid != id);
+function removeProject(project){
+    projects = projects.filter(proj => proj.uuid != project.uuid);
+    LS_removeProject(project);
 }

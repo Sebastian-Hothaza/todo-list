@@ -1,4 +1,4 @@
-export { LS_addTask, LS_editTask, LS_removeTask, LS_addProject, LS_load }
+export { LS_addTask, LS_editTask, LS_removeTask, LS_addProject, LS_editProject, LS_removeProject, LS_load }
 import { inbox, projectFactory } from "./project"
 import { taskItemFactory } from "./task";
 
@@ -60,11 +60,24 @@ function LS_removeTask(project, task){
 
 // Adds new project to LS
 function LS_addProject(project){
-    console.log("Adding project to LS: "+project.getName());
     let arr = [project];
     localStorage.setItem(project.uuid, JSON.stringify(arr));
     // Append the newly created project UUID to tracker to preserve order when restore from LS
     LS_addProjectUUID(project.uuid);
+}
+
+// Updates the LS for a project with updated info
+function LS_editProject(project){
+    let fetchedArray = JSON.parse(localStorage.getItem(project.uuid));
+    fetchedArray[0].title = project.getName();
+    localStorage.setItem(project.uuid, JSON.stringify(fetchedArray));
+}
+
+function LS_removeProject(project){
+    localStorage.removeItem(project.uuid);
+    // We also need to update projectsOrder!
+    let fetchedOrderArray = JSON.parse(localStorage.getItem("projectsOrder")); //This is an array of UUID's
+    localStorage.setItem("projectsOrder", JSON.stringify(fetchedOrderArray.filter(item => item != project.uuid)));
 }
 
 // Used to track order of projects by UUID so we can restore them in order
