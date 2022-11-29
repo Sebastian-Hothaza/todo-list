@@ -3,6 +3,7 @@ export { taskItemFactory }
 const taskItemFactory = (title, date) => {
     let uuid = self.crypto.randomUUID();
     let taskComplete = false;
+    
     function getName(){
         return title;
     }
@@ -28,6 +29,6 @@ const taskItemFactory = (title, date) => {
         }
     }
 
-    return { uuid, getName, setName, getDate, setDate, isComplete, toggleComplete};
+    return { uuid, title, date, getName, setName, getDate, setDate, isComplete, toggleComplete};
 };
 

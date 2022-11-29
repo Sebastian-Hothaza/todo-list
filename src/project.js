@@ -10,7 +10,9 @@ const projectFactory = (title) => {
 
     
 
-    function appendTask(task){ tasks.push(task); }
+    function appendTask(task){
+        tasks.push(task);
+    }
 
 
     // Returns all tasks associated with that project
@@ -47,6 +49,7 @@ const projectFactory = (title) => {
 
 const inbox = projectFactory('inbox');
 inbox.addSelf();
+
 
 
 

@@ -1,6 +1,8 @@
 import { taskItemFactory } from "./task";
-import { projectFactory, projects } from "./project";
+import { inbox, projectFactory, projects } from "./project";
 import { format } from 'date-fns';
+
+export { LS_loadTasks }
 
 
 
@@ -11,6 +13,7 @@ const allTasksBtn = document.querySelector('#allTasks');
 const todayBtn = document.querySelector('#today');
 const thisWeekBtn = document.querySelector('#thisWeek');
 const clearCompleteBtn = document.querySelector('#clearComplete');
+const resetStorageBtn = document.querySelector('#resetStorage');
 
 // This tracks where new tasks should be placed. Starts off with being "inbox"
 let workingProject = projects[0]; 
@@ -58,6 +61,12 @@ clearCompleteBtn.addEventListener('click', () => {
             }
         }
     }
+    
+});
+
+resetStorageBtn.addEventListener('click', () => {
+    localStorage.clear();
+    location.reload();
 });
 
 // Given an array of tasks, lists the valid tasks
@@ -85,7 +94,7 @@ function DOM_ListTasks(tasks, range){
         
 
         // Criteria to display the task
-        if (range == -1 || days_diff <= range){
+        if (range == -1 || days_diff <= range && days_diff>0){
             const task = document.createElement('div');
             task.setAttribute('uuid', tasks[i].uuid);
             task.classList.add('task');
@@ -156,6 +165,10 @@ function createTask(project){
 
     // Create task object
     const newTask = taskItemFactory(title, date);
+
+    // Append the newly created task to localStorage. 
+    //TODO make work for projects, currently always adding to inbox
+    LS_addTask(newTask);
 
     // Append the newly created object to the project
     project.appendTask(newTask);
@@ -350,3 +363,34 @@ function resetSelection(){
     });
 }
 
+// Adds task object to inbox (append)
+function LS_addTask(task){
+
+    let fetchedArray = JSON.parse(localStorage.getItem("inbox") || "[]");
+    fetchedArray.push(task);
+    localStorage.setItem("inbox", JSON.stringify(fetchedArray));
+
+
+
+    // Check if inbox exists yet
+    // if (!localStorage.getItem('inbox')){
+        // localStorage.setItem('inbox', JSON.stringify(task));
+    // } else {
+    //     let fetchedArray = JSON.parse(localStorage.getItem("inbox"));
+    //     fetchedArray.push(task);
+    //     localStorage.setItem("inbox", JSON.stringify(fetchedArray));
+    // }
+}
+
+// loads tasks from LS into the inbox
+function LS_loadTasks(){
+    let tasks = JSON.parse(localStorage.getItem("inbox"));
+    for (let i=0; i<tasks.length; i++){
+        let loadedTask = taskItemFactory(tasks[i].title, tasks[i].date);
+        loadedTask.uuid = tasks[i].uuid; // Assures uuid is preserved. Does this even really matter? Try commenting it out later.
+        
+        // Append the loaded task to localStorage
+        inbox.appendTask(loadedTask);
+    }
+    DOM_Update();
+}

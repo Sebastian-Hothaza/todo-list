@@ -1,9 +1,16 @@
 import "./page";
+import {LS_loadTasks} from "./page"
 
 const createTaskBtn = document.querySelector('#createTask');
 const createProjectBtn = document.querySelector('#createProject');
 const modal = document.querySelector('#modal');
 const modalProject = document.querySelector('#modalProject');
+
+// Check local storage
+if (localStorage.getItem('inbox')){
+    console.log('LS is populated!');
+    LS_loadTasks();
+}
 
 
 createTaskBtn.addEventListener('click', () => {
