@@ -1,6 +1,6 @@
 export { DOM_Update, DOM_ListProjects }
 import { createTask, editTask, removeTask } from "./task";
-import { createProject, editProject, projects } from "./project";
+import { createProject, editProject, removeProject, projects } from "./project";
 import { format } from 'date-fns';
 
 let workingProject = projects[0]; 
@@ -76,7 +76,7 @@ resetStorageBtn.addEventListener('click', () => {
 });
 // -----------------------------------------------------------------------------
 
-// Updates DOM display 
+// Updates DOM display, calls DOM_ListTasks 
 function DOM_Update(){
     // Clearing can only happen here! If we clear in the DOM_ListTasks method, we lose ability to append
     document.querySelector('#taskList').innerHTML = '';
@@ -249,8 +249,7 @@ function DOM_ListProjects(){
         deleteBtn.addEventListener('click', (e) => {
             e.stopPropagation(); // We need to stop propagation here!
 
-            //Projects cannot be modified here! It is read only since imported
-            projects[i].removeProject(projects[i].uuid);
+            removeProject(projects[i].uuid);
 
             resetSelection();
             allTasksBtn.classList.add('selected');

@@ -38,7 +38,7 @@ function LS_addProjectUUID(uuid){
 function LS_load(){
     // Load inbox if it exists. The inbox MUST be the first item loaded? Maybe not...just that the inbox tasks must be appened to inbox. check later
     if (localStorage.getItem("inbox")){
-        console.log("Inbox exists. Loading it now");
+        // console.log("Inbox exists. Loading it now");
         let tasks = JSON.parse(localStorage.getItem("inbox"));
         for (let i=0; i<tasks.length; i++){
             let loadedTask = taskItemFactory(tasks[i].title, tasks[i].date);
@@ -53,7 +53,7 @@ function LS_load(){
         // Load UUID array and iterate thought it
         const objectsOrder = JSON.parse(localStorage.getItem("projectsOrder"));
         for (let i=0; i<objectsOrder.length; i++){
-            console.log("Building object with UUID "+objectsOrder[i]);
+            // console.log("Building object with UUID "+objectsOrder[i]);
 
             // for each UUID, load in the project
             let loadedProject = projectFactory(JSON.parse(localStorage.getItem(objectsOrder[i]))[0].title);
@@ -62,9 +62,9 @@ function LS_load(){
 
             // Task loading
             let tasks = JSON.parse(localStorage.getItem(objectsOrder[i]));
-            console.log("start loading tasks for project "+loadedProject.getName());
+            // console.log("start loading tasks for project "+loadedProject.getName());
             for (let j=1; j<tasks.length; j++){
-                console.log("--building new task: "+tasks[j].title);
+                // console.log("--building new task: "+tasks[j].title);
                 let loadedTask = taskItemFactory(tasks[j].title, tasks[j].date);
                 loadedTask.uuid = tasks[j].uuid; 
                 

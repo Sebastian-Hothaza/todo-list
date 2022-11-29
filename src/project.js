@@ -1,4 +1,4 @@
-export { createProject, editProject, projectFactory, projects, inbox };
+export { createProject, editProject, removeProject, projectFactory, projects, inbox };
 import { LS_addProject } from "./localStorage"
 
 let projects = [];
@@ -28,10 +28,6 @@ const projectFactory = (title) => {
         tasks = tasks.filter(task => task.uuid != id); 
     }
 
-    function removeProject(id){
-        projects = projects.filter(proj => proj.uuid != id); 
-    }
-
     function getName(){
         return title;
     }
@@ -45,7 +41,7 @@ const projectFactory = (title) => {
     }
 
     
-    return { uuid, title, appendTask, getTasks, getTask, getName, setName, addSelf, removeTask, removeProject};
+    return { uuid, title, appendTask, getTasks, getTask, getName, setName, addSelf, removeTask};
 };
 
 const inbox = projectFactory('inbox');
@@ -78,4 +74,8 @@ function editProject(){
 
     // Update the project with the new params
     project.setName(document.querySelector('#modalProject #modalTitle').value);
+}
+
+function removeProject(id){
+    projects = projects.filter(proj => proj.uuid != id);
 }
