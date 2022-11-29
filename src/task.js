@@ -1,4 +1,4 @@
-export { createTask, editTask, removeTask, taskItemFactory }
+export { createTask, editTask, removeTask, toggleCompleteTask, taskItemFactory }
 import { LS_addTask, LS_editTask } from "./localStorage"
 import { projects } from "./project";
 
@@ -30,10 +30,17 @@ const taskItemFactory = (title, date) => {
         }else{
             taskComplete = true;
         }
-        
     }
 
-    return { uuid, title, date, taskComplete, getName, setName, getDate, setDate, isComplete, toggleComplete};
+    function markComplete(){
+        taskComplete = true;
+    }
+
+    function markIncomplete(){
+        taskComplete = false;
+    }
+
+    return { uuid, title, date, taskComplete, getName, setName, getDate, setDate, isComplete, toggleComplete, markComplete, markIncomplete };
 };
 
 // Creates a task using info from modal for a project
@@ -76,7 +83,7 @@ function editTask(){
  
 }
 
-// Removes a task by uuid
+// Removes a task by uuid from project
 function removeTask(id){
     // Check each project to see where the task is located
    for (let i=0; i<projects.length; i++){
@@ -86,4 +93,21 @@ function removeTask(id){
            break;
        }
    }
+}
+
+// Toggles a task as complete
+function toggleCompleteTask(task){
+    task.toggleComplete();
+    let project;
+    // We've updated the task object, now we need to update the LS
+
+     // Check each project to see where the task is located
+    for (let i=0; i<projects.length; i++){
+        if (projects[i].getTask(task.uuid) && task.uuid == projects[i].getTask(task.uuid).uuid){ // We check that the task exists AND then if the uuid match
+            project = projects[i];
+            break;
+        }
+    }
+    // Update the LS
+    LS_editTask(project,task);
 }

@@ -42,7 +42,8 @@ function LS_load(){
         let tasks = JSON.parse(localStorage.getItem("inbox"));
         for (let i=0; i<tasks.length; i++){
             let loadedTask = taskItemFactory(tasks[i].title, tasks[i].date);
-            loadedTask.uuid = tasks[i].uuid; 
+            loadedTask.uuid = tasks[i].uuid; // THIS DOES NOTHING! CAN NOT ACCESS DIRECTLY HERE. In fact, can write garbage here
+            tasks[i].taskComplete? loadedTask.markComplete() : loadedTask.markIncomplete()
             inbox.appendTask(loadedTask);
         }
     }
@@ -50,6 +51,7 @@ function LS_load(){
 
     // Check if user projects exist
     if (JSON.parse(localStorage.getItem("projectsOrder"))){
+        console.log("Loading user project");
         // Load UUID array and iterate thought it
         const objectsOrder = JSON.parse(localStorage.getItem("projectsOrder"));
         for (let i=0; i<objectsOrder.length; i++){
@@ -57,7 +59,7 @@ function LS_load(){
 
             // for each UUID, load in the project
             let loadedProject = projectFactory(JSON.parse(localStorage.getItem(objectsOrder[i]))[0].title);
-            loadedProject.uuid = objectsOrder[i];
+            loadedProject.uuid = objectsOrder[i]; //TODO: THIS IS BROKEN AND DOES NOTHING ?
             loadedProject.addSelf();
 
             // Task loading
@@ -67,6 +69,7 @@ function LS_load(){
                 // console.log("--building new task: "+tasks[j].title);
                 let loadedTask = taskItemFactory(tasks[j].title, tasks[j].date);
                 loadedTask.uuid = tasks[j].uuid; 
+                tasks[j].taskComplete? loadedTask.markComplete() : loadedTask.markIncomplete();
                 
                 // Append the newly loaded object to the project
                 loadedProject.appendTask(loadedTask);
@@ -79,6 +82,7 @@ function LS_load(){
 
 // Updates the LS in a project with given task containing updated info
 function LS_editTask(project, task){
+  
     let startingIdx;
     let projectKey;
     
@@ -93,18 +97,14 @@ function LS_editTask(project, task){
     let fetchedArray = JSON.parse(localStorage.getItem(projectKey));
     
     // go through array of tasks in the project until find matching ID, then update that task
-    console.log(fetchedArray);
     for ( ; startingIdx<fetchedArray.length; startingIdx++){
         if (fetchedArray[startingIdx].uuid == task.uuid){
 
             // Update the task here!
             fetchedArray[startingIdx].title = task.getName();
             fetchedArray[startingIdx].date = task.getDate();
-            //fetchedArray[startingIdx].isComplete = task.isComplete();
+            fetchedArray[startingIdx].taskComplete = task.isComplete();
             
-
-
-
             // Finally, set the item in LS
             localStorage.setItem(projectKey, JSON.stringify(fetchedArray));
         }

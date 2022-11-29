@@ -1,5 +1,5 @@
 export { DOM_Update, DOM_ListProjects }
-import { createTask, editTask, removeTask } from "./task";
+import { createTask, editTask, removeTask, toggleCompleteTask } from "./task";
 import { createProject, editProject, removeProject, projects } from "./project";
 import { format } from 'date-fns';
 
@@ -136,6 +136,10 @@ function DOM_ListTasks(tasks, range){
             task.classList.add('task');
             task.textContent = tasks[i].getName();
 
+            console.log("Checking if task is complete: "+tasks[i].isComplete());
+            console.log("task uuid: "+ tasks[i].uuid);
+            console.log("task name: "+ tasks[i].getName());
+            
             // Add or remove the isComplete CSS tag
             if (tasks[i].isComplete()){
                 task.classList.add('taskComplete');
@@ -183,7 +187,7 @@ function DOM_ListTasks(tasks, range){
             toggleCompleteBtn.textContent = 'Completed';
             task.appendChild(toggleCompleteBtn);
             toggleCompleteBtn.addEventListener('click', () => {
-                tasks[i].toggleComplete();
+                toggleCompleteTask(tasks[i]);
                 DOM_Update();
             });
 
