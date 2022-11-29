@@ -7,11 +7,7 @@ const modal = document.querySelector('#modal');
 const modalProject = document.querySelector('#modalProject');
 
 // Check local storage
-if (localStorage.length){
-    console.log('LS is populated!');
-    LS_load();
-}
-
+if (localStorage.length){ LS_load(); }
 
 createTaskBtn.addEventListener('click', () => {
     modal.setAttribute('modalType', 'create');

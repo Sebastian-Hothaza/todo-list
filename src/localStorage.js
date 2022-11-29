@@ -5,7 +5,7 @@ import { taskItemFactory } from "./task";
 import { DOM_Update, DOM_ListProjects } from "./page"
 
 
-// Adds task object to project (append)
+// Adds task object to existing project
 function LS_addTask(project, task){
     // We differentiate between inbox and custom project tasks
     if (project == inbox){
@@ -20,12 +20,20 @@ function LS_addTask(project, task){
     }
 }
 
+// Adds new project to LS
 function LS_addProject(project){
     console.log("Adding project to LS: "+project.getName());
     let arr = [project];
     localStorage.setItem(project.uuid, JSON.stringify(arr));
     // Append the newly created project UUID to tracker to preserve order when restore from LS
     LS_addProjectUUID(project.uuid);
+}
+
+// Used to track order of projects by UUID so we can restore them in order
+function LS_addProjectUUID(uuid){
+    let fetchedArray = JSON.parse(localStorage.getItem("projectsOrder") || "[]");
+    fetchedArray.push(uuid);
+    localStorage.setItem("projectsOrder", JSON.stringify(fetchedArray));
 }
 
 // Load from LS
@@ -70,12 +78,4 @@ function LS_load(){
     }
     DOM_ListProjects();
     DOM_Update();
-}
-
-
-// Used to track order of projects by UUID so we can restore them in order
-function LS_addProjectUUID(uuid){
-    let fetchedArray = JSON.parse(localStorage.getItem("projectsOrder") || "[]");
-    fetchedArray.push(uuid);
-    localStorage.setItem("projectsOrder", JSON.stringify(fetchedArray));
 }
