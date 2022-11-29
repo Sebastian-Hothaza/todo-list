@@ -57,12 +57,12 @@ thisWeekBtn.addEventListener('click', () => {
 });
 
 clearCompleteBtn.addEventListener('click', () => {
-    // Go through all projects and only keep those who are not marked complete
+    // Go through all projects and only keep tasks who are not marked complete
     for (let i=0; i<projects.length; i++){
         // Go through each task in the project
         for (let j=0; j<projects[i].getTasks().length; j++){
             if (projects[i].getTasks()[j].isComplete()){
-                projects[i].removeTask(projects[i].getTasks()[j].uuid);
+                removeTask(projects[i].getTasks()[j]);
                 DOM_Update();
             }
         }
