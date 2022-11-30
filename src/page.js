@@ -76,138 +76,148 @@ resetStorageBtn.addEventListener('click', () => {
 });
 // -----------------------------------------------------------------------------
 
-// Updates DOM display, calls DOM_ListTasks 
+// Indirectly updates DOM by calling DOM_ListTasks dependent on currently selected sidebar heading
 function DOM_Update(){
-    // Clearing can only happen here! If we clear in the DOM_ListTasks method, we lose ability to append
-    document.querySelector('#taskList').innerHTML = '';
-    //console.log("cleared the DOM");
+    document.querySelector('#taskList').innerHTML = ''; // Clearing can only happen here! If we clear in the DOM_ListTasks method, we lose ability to append
 
     if (document.querySelector('#allTasks').classList.contains('selected')){
-        // We must print ALL tasks from ALL projects
-        for (let i=0; i<projects.length; i++){
-            DOM_ListTasks(projects[i].getTasks(),-1);
-        }
-        
+        projects.forEach(proj => DOM_ListTasks(proj.getTasks(),-1)); // Print ALL tasks from ALL projects
     } else if (document.querySelector('#today').classList.contains('selected')) {
-        // We must print ALL tasks from ALL projects that fit the criteria
-        for (let i=0; i<projects.length; i++){
-            DOM_ListTasks(projects[i].getTasks(),1);
-        }
-        
+        projects.forEach(proj => DOM_ListTasks(proj.getTasks(),1)); // Print ALL tasks from ALL projects due today
     } else if (document.querySelector('#thisWeek').classList.contains('selected')) {
-        // We must print ALL tasks from ALL projects that fit the criteria
-        for (let i=0; i<projects.length; i++){
-            DOM_ListTasks(projects[i].getTasks(),7);
-        }
-    } else { //DOM updated for a project
-        DOM_ListTasks(workingProject.getTasks(),-1);
+        projects.forEach(proj => DOM_ListTasks(proj.getTasks(),7)); // Print ALL tasks from ALL projects due over next 7 days
+    } else { 
+        DOM_ListTasks(workingProject.getTasks(),-1); //Print ALL tasks from currently selected project
     }
-    
 }
 
-// Given an array of tasks, lists the valid tasks
+// Given an array of tasks, updates DOM with the valid tasks
 // range:-1 -> list all tasks
 // range: 1 -> list all tasks due today
 // range: n -> list all tasks occuring over the next n days 
 function DOM_ListTasks(tasks, range){
     const taskList = document.querySelector('#taskList');
     
-
-    // Loop thru array and list each valid task adding the edit listener
+    // Loop thru task array and list each valid task
     for (let i=0; i<tasks.length; i++){
         
         // Convert due date into a date object so we can work with it
         var parts = tasks[i].getDate().split('-');
         var dueDate = new Date(parts[0], parts[1] - 1, parts[2]); 
+        const time_diff = dueDate.getTime()-new Date().getTime();
+        const days_diff = time_diff / (1000 * 3600 * 24);
 
         // If we want items due today, we have to cut any that would extend to tmw (24H bug fix)
         if (range == 1 && (dueDate.getDate() != new Date().getDate())) continue;
-
-
-        const time_diff = dueDate.getTime()-new Date().getTime();
-        const days_diff = time_diff / (1000 * 3600 * 24);
         
+        // Exclude tasks which fail criteria
+        if (!(range == -1 || (days_diff <= range && days_diff>-1))) continue; 
+
+       
+        // Create the task container
+        const taskContainer = document.createElement('div');
+        taskContainer.classList.add('taskContainer');
+       
+        taskContainer.setAttribute('uuid', tasks[i].uuid); //We can likely remove this
+        tasks[i].isComplete()? taskContainer.classList.add('taskComplete') : taskContainer.classList.remove('taskComplete')
+        tasks[i].isPriority()? taskContainer.classList.add('taskPriority') : taskContainer.classList.remove('taskPriority')
+
+        // COMPLETE
+        const toggleCompleteBtn = document.createElement('button');
+        toggleCompleteBtn.classList.add('taskCompleteBtn');
         
+        const completeIcon = document.createElement('span');
+        completeIcon.classList.add("material-icons-outlined");
+        tasks[i].isComplete()? completeIcon.textContent = 'check_circle' : completeIcon.textContent = 'circle'
+        toggleCompleteBtn.appendChild(completeIcon);
 
-        // Criteria to display the task
-        if (range == -1 || (days_diff <= range && days_diff>0)){
-            const task = document.createElement('div');
-            task.setAttribute('uuid', tasks[i].uuid);
-            task.classList.add('task');
-            task.textContent = tasks[i].getName();
-            
-            // Add or remove the isComplete CSS tag
-            if (tasks[i].isComplete()){
-                task.classList.add('taskComplete');
-            }else{
-                task.classList.remove('taskComplete');
-            }
+        taskContainer.appendChild(toggleCompleteBtn);
+        toggleCompleteBtn.addEventListener('click', () => {
+            toggleCompleteTask(tasks[i]);
+            DOM_Update();
+        });
+        
+        // CARD
+        const taskCard = document.createElement('div');
+        taskCard.classList.add('taskCard');
 
-            // Add or remove the priority CSS tag
-            if (tasks[i].isPriority()){
-                task.classList.add('taskPriority');
-            }else{
-                task.classList.remove('taskPriority');
-            }
+        // LEFT: title and description
+        const cardLeft = document.createElement('div');
+        cardLeft.classList.add('cardLeft');
 
-            // DESC
+        const taskTitle = document.createElement('div');
+        taskTitle.classList.add('taskTitle');
+        taskTitle.textContent = tasks[i].getName();
+        cardLeft.appendChild(taskTitle);
+
+        // Only add Desc to DOM if it exists
+        if (tasks[i].getDesc()){
             const taskDesc = document.createElement('div');
+            taskDesc.classList.add('taskDesc');
             taskDesc.textContent = tasks[i].getDesc();
-            task.appendChild(taskDesc);
-
-
-            // DATE
-            const taskDate = document.createElement('div');
-            taskDate.classList.add('daaate');
-            taskDate.textContent = tasks[i].getDate();
-            task.appendChild(taskDate);
-    
-            //EDIT
-            const editBtn = document.createElement('button');
-            editBtn.textContent = 'edit';
-            task.appendChild(editBtn);
-            editBtn.addEventListener('click', () => {
-                modal.setAttribute('modalType', 'edit');
-                
-                // STORE html data attribute with unique ID
-                modal.setAttribute('uuid', tasks[i].uuid);
-    
-                // Set heading accordingly and pre-load fields with our tasks content
-                document.querySelector('#modal #heading').textContent = 'Edit task';
-                document.querySelector('#modal #modalTitle').value = tasks[i].getName();
-                document.querySelector('#modal #modalDate').value = tasks[i].getDate();
-                document.querySelector('#modal #modalDesc').value = tasks[i].getDesc();
-                document.querySelector('#modal #modalPriority').checked = tasks[i].isPriority();
-    
-    
-                modal.showModal();
-            });  
-            
-            
-            //DELETE
-            const deleteBtn = document.createElement('button');
-            deleteBtn.textContent = 'delete';
-            task.appendChild(deleteBtn);
-            deleteBtn.addEventListener('click', () => {
-                removeTask(tasks[i]);
-                DOM_Update();
-            });
-            
-
-            //COMPLETE
-            const toggleCompleteBtn = document.createElement('button');
-            toggleCompleteBtn.textContent = 'Completed';
-            task.appendChild(toggleCompleteBtn);
-            toggleCompleteBtn.addEventListener('click', () => {
-                toggleCompleteTask(tasks[i]);
-                DOM_Update();
-            });
-
-
-
-            // DONE building elements in the task container, now append it
-            taskList.appendChild(task);
+            cardLeft.appendChild(taskDesc);
         }
+
+        taskCard.appendChild(cardLeft);
+
+
+        // RIGHT: date, edit and delete buttons
+        const cardRight = document.createElement('div');
+        cardRight.classList.add('cardRight');
+    
+        const taskDate = document.createElement('div');
+        taskDate.classList.add('taskDate');
+        taskDate.textContent = tasks[i].getDate();
+        cardRight.appendChild(taskDate);
+
+        //EDIT
+        const editBtn = document.createElement('button');
+        const editBtnIcon = document.createElement('span');
+        editBtnIcon.classList.add("material-icons-outlined");
+        editBtnIcon.textContent = 'edit';
+        editBtn.appendChild(editBtnIcon);
+        cardRight.appendChild(editBtn);
+        editBtn.addEventListener('click', () => {
+            modal.setAttribute('modalType', 'edit');
+            
+            // STORE html data attribute with unique ID
+            modal.setAttribute('uuid', tasks[i].uuid);
+
+            // Set heading accordingly and pre-load fields with our tasks content
+            document.querySelector('#modal #heading').textContent = 'Edit task';
+            document.querySelector('#modal #modalTitle').value = tasks[i].getName();
+            document.querySelector('#modal #modalDate').value = tasks[i].getDate();
+            document.querySelector('#modal #modalDesc').value = tasks[i].getDesc();
+            document.querySelector('#modal #modalPriority').checked = tasks[i].isPriority();
+
+
+            modal.showModal();
+        });  
+
+
+        //DELETE
+        const deleteBtn = document.createElement('button');
+        const deleteBtnIcon = document.createElement('span');
+        deleteBtnIcon.classList.add("material-icons-outlined");
+        deleteBtnIcon.textContent = 'delete';
+        deleteBtn.appendChild(deleteBtnIcon);
+        cardRight.appendChild(deleteBtn);
+        deleteBtn.addEventListener('click', () => {
+            removeTask(tasks[i]);
+            DOM_Update();
+        });
+        taskCard.appendChild(cardRight);
+
+        
+        
+        
+        // Done building taskCard, append it to the taskContainer
+        taskContainer.appendChild(taskCard);
+
+
+        // DONE building task container, now append it
+        taskList.appendChild(taskContainer);
+
     }
 }
 

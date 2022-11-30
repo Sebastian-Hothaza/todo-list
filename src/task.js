@@ -156,3 +156,26 @@ function togglePriorityTask(task){
     // Update the LS
     LS_editTask(project,task);
 }
+
+
+// TODO: Privatize elements as follows:
+
+/*
+
+check: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get
+
+const objectFactory = (value) =>{
+    function getValue(){ return value; }
+    function setValue(newValue){ value=newValue; }
+    const toJSON = () => {
+        return JSON.stringify({value})
+    }
+    return { getValue, setValue, toJSON }
+};
+
+const myObject = objectFactory("John");
+
+*/
+
+
+

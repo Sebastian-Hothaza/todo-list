@@ -26,3 +26,5 @@ createProjectBtn.addEventListener('click', () => {
     document.querySelector('#modalProject #heading').textContent = 'Create new Project';
     modalProject.showModal();    
 });
+
+// TODO: FIX BUG WHERE Clear completed task not working correctly on multiple items!
