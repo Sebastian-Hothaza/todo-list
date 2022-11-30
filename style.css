@@ -26,8 +26,8 @@ dialog{
     padding: 15px;
 
     /* NOTE: This is sloppy. Find a better way */
-    width: 300px;
-    height: 300px;
+    width: 250px;
+    height: 400px;
 
     margin-left: -150px;
     margin-top: -150px;
@@ -137,5 +137,9 @@ dialog::backdrop{
 
 .taskComplete{
     color: green;
+}
+
+.taskPriority{
+    text-decoration: underline;
 }
 
