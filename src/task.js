@@ -3,9 +3,8 @@ import { LS_addTask, LS_editTask, LS_removeTask } from "./localStorage"
 import { projects } from "./project";
 
 
-const taskItemFactory = (title, desc, date, priority) => {
+const taskItemFactory = (title, desc, date, priority, complete) => {
     let uuid = self.crypto.randomUUID();
-    let taskComplete = false; //TODO: Move out as part of the CTOR in same way as priority
     
     function getName(){
         return title;
@@ -27,7 +26,7 @@ const taskItemFactory = (title, desc, date, priority) => {
         desc = newDesc;
     }
 
-    function getPriority(){
+    function isPriority(){
         return priority;
     }
     function setPriority(newPriority){
@@ -35,14 +34,14 @@ const taskItemFactory = (title, desc, date, priority) => {
     }
 
     function isComplete(){
-        return taskComplete;
+        return complete;
     }
 
     function toggleComplete(){
-        if (taskComplete){
-            taskComplete = false;
+        if (complete){
+            complete = false;
         }else{
-            taskComplete = true;
+            complete = true;
         }
     }
     function togglePriority(){
@@ -54,14 +53,14 @@ const taskItemFactory = (title, desc, date, priority) => {
     }
 
     function markComplete(){
-        taskComplete = true;
+        complete = true;
     }
 
     function markIncomplete(){
-        taskComplete = false;
+        complete = false;
     }
 
-    return { uuid, title, desc, date, priority, taskComplete, getName, setName, getDate, setDate, getDesc, setDesc,getPriority, setPriority, togglePriority, isComplete, toggleComplete, markComplete, markIncomplete };
+    return { uuid, title, desc, date, priority, complete, getName, setName, getDate, setDate, getDesc, setDesc,isPriority, setPriority, togglePriority, isComplete, toggleComplete, markComplete, markIncomplete };
 };
 
 // Creates a task using info from modal for a project
@@ -73,7 +72,7 @@ function createTask(project){
     const priority = document.querySelector('#modal #modalPriority').checked;
     
     // Create task object
-    const newTask = taskItemFactory(title, desc, date, priority);
+    const newTask = taskItemFactory(title, desc, date, priority, false);
 
     // Append the newly created task to localStorage. 
     LS_addTask(project, newTask);

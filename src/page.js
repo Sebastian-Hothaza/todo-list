@@ -144,7 +144,7 @@ function DOM_ListTasks(tasks, range){
             }
 
             // Add or remove the priority CSS tag
-            if (tasks[i].getPriority()){
+            if (tasks[i].isPriority()){
                 task.classList.add('taskPriority');
             }else{
                 task.classList.remove('taskPriority');
@@ -177,7 +177,7 @@ function DOM_ListTasks(tasks, range){
                 document.querySelector('#modal #modalTitle').value = tasks[i].getName();
                 document.querySelector('#modal #modalDate').value = tasks[i].getDate();
                 document.querySelector('#modal #modalDesc').value = tasks[i].getDesc();
-                document.querySelector('#modal #modalPriority').checked = tasks[i].getPriority();
+                document.querySelector('#modal #modalPriority').checked = tasks[i].isPriority();
     
     
                 modal.showModal();

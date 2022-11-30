@@ -42,8 +42,8 @@ function LS_editTask(project, task){
             fetchedArray[startingIdx].title = task.getName();
             fetchedArray[startingIdx].desc = task.getDesc();
             fetchedArray[startingIdx].date = task.getDate();
-            fetchedArray[startingIdx].priority = task.getPriority();
-            fetchedArray[startingIdx].taskComplete = task.isComplete();
+            fetchedArray[startingIdx].priority = task.isPriority();
+            fetchedArray[startingIdx].complete = task.isComplete();
             
             
             // Finally, set the item in LS
@@ -97,9 +97,8 @@ function LS_load(){
         // console.log("Inbox exists. Loading it now");
         let tasks = JSON.parse(localStorage.getItem("inbox"));
         for (let i=0; i<tasks.length; i++){
-            let loadedTask = taskItemFactory(tasks[i].title, tasks[i].desc, tasks[i].date, tasks[i].priority);
+            let loadedTask = taskItemFactory(tasks[i].title, tasks[i].desc, tasks[i].date, tasks[i].priority, tasks[i].complete);
             loadedTask.uuid = tasks[i].uuid; 
-            tasks[i].taskComplete? loadedTask.markComplete() : loadedTask.markIncomplete()
             inbox.appendTask(loadedTask);
         }
     }
@@ -122,9 +121,8 @@ function LS_load(){
             // console.log("start loading tasks for project "+loadedProject.getName());
             for (let j=1; j<tasks.length; j++){
                 // console.log("--building new task: "+tasks[j].title);
-                let loadedTask = taskItemFactory(tasks[j].title, tasks[j].desc, tasks[j].date, tasks[j].priority);
-                loadedTask.uuid = tasks[j].uuid; 
-                tasks[j].taskComplete? loadedTask.markComplete() : loadedTask.markIncomplete();
+                let loadedTask = taskItemFactory(tasks[j].title, tasks[j].desc, tasks[j].date, tasks[j].priority, tasks[j].complete);
+                loadedTask.uuid = tasks[j].uuid;
                 
                 // Append the newly loaded object to the project
                 loadedProject.appendTask(loadedTask);
