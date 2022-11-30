@@ -1,11 +1,11 @@
-export { createTask, editTask, removeTask, toggleCompleteTask, taskItemFactory }
+export { createTask, editTask, removeTask, toggleCompleteTask, togglePriorityTask, taskItemFactory }
 import { LS_addTask, LS_editTask, LS_removeTask } from "./localStorage"
 import { projects } from "./project";
 
 
-const taskItemFactory = (title, date) => {
+const taskItemFactory = (title, desc, date, priority) => {
     let uuid = self.crypto.randomUUID();
-    let taskComplete = false;
+    let taskComplete = false; //TODO: Move out as part of the CTOR in same way as priority
     
     function getName(){
         return title;
@@ -20,6 +20,20 @@ const taskItemFactory = (title, date) => {
         date = newDate;
     }
 
+    function getDesc(){
+        return desc;
+    }
+    function setDesc(newDesc){
+        desc = newDesc;
+    }
+
+    function getPriority(){
+        return priority;
+    }
+    function setPriority(newPriority){
+        priority = newPriority;
+    }
+
     function isComplete(){
         return taskComplete;
     }
@@ -31,6 +45,13 @@ const taskItemFactory = (title, date) => {
             taskComplete = true;
         }
     }
+    function togglePriority(){
+        if (priority){
+            priority = false;
+        }else{
+            priority = true;
+        }
+    }
 
     function markComplete(){
         taskComplete = true;
@@ -40,17 +61,19 @@ const taskItemFactory = (title, date) => {
         taskComplete = false;
     }
 
-    return { uuid, title, date, taskComplete, getName, setName, getDate, setDate, isComplete, toggleComplete, markComplete, markIncomplete };
+    return { uuid, title, desc, date, priority, taskComplete, getName, setName, getDate, setDate, getDesc, setDesc,getPriority, setPriority, togglePriority, isComplete, toggleComplete, markComplete, markIncomplete };
 };
 
 // Creates a task using info from modal for a project
 function createTask(project){
     // Fetch data from modal
     const title = document.querySelector('#modal #modalTitle').value;
+    const desc = document.querySelector('#modal #modalDesc').value;
     const date = document.querySelector('#modal #modalDate').value;
-
+    const priority = document.querySelector('#modal #modalPriority').checked;
+    
     // Create task object
-    const newTask = taskItemFactory(title, date);
+    const newTask = taskItemFactory(title, desc, date, priority);
 
     // Append the newly created task to localStorage. 
     LS_addTask(project, newTask);
@@ -76,6 +99,8 @@ function editTask(){
     // Update the task with the new params
     task.setName(document.querySelector('#modal #modalTitle').value);
     task.setDate(document.querySelector('#modal #modalDate').value);
+    task.setDesc(document.querySelector('#modal #modalDesc').value);
+    task.setPriority(document.querySelector('#modal #modalPriority').checked);
 
 
     // Update edited task to localStorage. 
@@ -102,6 +127,23 @@ function removeTask(task){
 // Toggles a task as complete
 function toggleCompleteTask(task){
     task.toggleComplete();
+    let project;
+    // We've updated the task object, now we need to update the LS
+
+     // Check each project to see where the task is located
+    for (let i=0; i<projects.length; i++){
+        if (projects[i].getTask(task.uuid) && task.uuid == projects[i].getTask(task.uuid).uuid){ // We check that the task exists AND then if the uuid match
+            project = projects[i];
+            break;
+        }
+    }
+    // Update the LS
+    LS_editTask(project,task);
+}
+
+// Toggles a task as priority
+function togglePriorityTask(task){
+    task.togglePriority();
     let project;
     // We've updated the task object, now we need to update the LS
 

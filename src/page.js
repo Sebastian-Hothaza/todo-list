@@ -142,7 +142,21 @@ function DOM_ListTasks(tasks, range){
             }else{
                 task.classList.remove('taskComplete');
             }
-    
+
+            // Add or remove the priority CSS tag
+            if (tasks[i].getPriority()){
+                task.classList.add('taskPriority');
+            }else{
+                task.classList.remove('taskPriority');
+            }
+
+            // DESC
+            const taskDesc = document.createElement('div');
+            taskDesc.textContent = tasks[i].getDesc();
+            task.appendChild(taskDesc);
+
+
+            // DATE
             const taskDate = document.createElement('div');
             taskDate.classList.add('daaate');
             taskDate.textContent = tasks[i].getDate();
@@ -162,6 +176,8 @@ function DOM_ListTasks(tasks, range){
                 document.querySelector('#modal #heading').textContent = 'Edit task';
                 document.querySelector('#modal #modalTitle').value = tasks[i].getName();
                 document.querySelector('#modal #modalDate').value = tasks[i].getDate();
+                document.querySelector('#modal #modalDesc').value = tasks[i].getDesc();
+                document.querySelector('#modal #modalPriority').checked = tasks[i].getPriority();
     
     
                 modal.showModal();
@@ -268,6 +284,8 @@ function DOM_ListProjects(){
 function resetModal(){
     document.querySelector('#modal #modalTitle').value = '';
     document.querySelector('#modal #modalDate').value = '';
+    document.querySelector('#modal #modalDesc').value = '';
+    document.querySelector('#modal #modalPriority').checked = false;
 }
 
 // Resets all fields in the modal
