@@ -11,6 +11,10 @@ if (localStorage.length){
     LS_load();
     DOM_ListProjects();
     DOM_Update();
+} else {
+    // Create blank inbox object (relied on for adding tasks later)
+    let arr = [];
+    localStorage.setItem("inbox", JSON.stringify(arr));
 }
 
 // Create task

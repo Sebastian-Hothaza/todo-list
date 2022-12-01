@@ -8,7 +8,7 @@ function LS_addTask(project, task){
     let LS_key;
     (project == inbox)? LS_key=project.title : LS_key=project.uuid
 
-    let fetchedTasks = JSON.parse(localStorage.getItem(LS_key) || "[]"); //TODO: WHY THE || [] is needed?
+    let fetchedTasks = JSON.parse(localStorage.getItem(LS_key)); 
     fetchedTasks.push(task);
     localStorage.setItem(LS_key, JSON.stringify(fetchedTasks));
 }
@@ -87,7 +87,7 @@ function LS_addProjectUUID(uuid){
 
 // Load from LS
 function LS_load(){
-    // Load inbox if it exists. 
+    // Load inbox if it exists. NOTE: It always exists if LS_load is called!
     if (localStorage.getItem("inbox")){
         console.log("Inbox exists. Loading it now");
         let LS_tasks = JSON.parse(localStorage.getItem("inbox"));
@@ -97,7 +97,7 @@ function LS_load(){
             loadedTask.complete = LS_tasks[i].complete;
             inbox.appendTask(loadedTask);
         }
-    }
+    } 
     
 
     // Check if user projects exist
