@@ -55,14 +55,7 @@ function createProject(){
     newProject.addSelf();
 
     // Append the newly created project to localStorage. 
-    LS_addProject(newProject);
-
-    
-
-    // Make the freshly created project the center of attention!
-    // workingProject = newProject; TODO; move out to page?
-
-    
+    LS_addProject(newProject);    
 }
 
 // Updates a project using info from modal

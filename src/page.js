@@ -85,22 +85,37 @@ function DOM_Update(){
     document.querySelector('#taskList').innerHTML = ''; // Clearing can only happen here! If we clear in the DOM_ListTasks method, we lose ability to append
 
     if (document.querySelector('#allTasks').classList.contains('selected')){
-        projects.forEach(proj => DOM_ListTasks(proj.getTasks(),-1)); // Print ALL tasks from ALL projects
+        projects.forEach(proj => DOM_ListTasks(proj,-1));
     } else if (document.querySelector('#today').classList.contains('selected')) {
-        projects.forEach(proj => DOM_ListTasks(proj.getTasks(),1)); // Print ALL tasks from ALL projects due today
+        projects.forEach(proj => DOM_ListTasks(proj,1));
     } else if (document.querySelector('#thisWeek').classList.contains('selected')) {
-        projects.forEach(proj => DOM_ListTasks(proj.getTasks(),7)); // Print ALL tasks from ALL projects due over next 7 days
+        projects.forEach(proj => DOM_ListTasks(proj,7));
     } else { 
-        DOM_ListTasks(workingProject.getTasks(),-1); //Print ALL tasks from currently selected project
+        DOM_ListTasks(workingProject,-1); //Print ALL tasks from currently selected project
     }
+}
+
+// Appends the project header to the DOM 
+function DOM_printProjectHeader(project){
+    const taskList = document.querySelector('#taskList');
+    const projSep = document.createElement('div');
+    projSep.innerText = project.getName();
+    projSep.classList.add('projectSeparator');
+    taskList.appendChild(projSep);
 }
 
 // Given an array of tasks, updates DOM with the valid tasks
 // range:-1 -> list all tasks
 // range: 1 -> list all tasks due today
 // range: n -> list all tasks occuring over the next n days 
-function DOM_ListTasks(tasks, range){
+function DOM_ListTasks(project, range){
     const taskList = document.querySelector('#taskList');
+    let headerPrinted = false;
+    let tasks = project.getTasks(); //TODO: Simplify in here, maybe use forEach
+
+    let isUserProject = !(document.querySelector('#allTasks').classList.contains('selected') || 
+                        document.querySelector('#today').classList.contains('selected') || 
+                        document.querySelector('#thisWeek').classList.contains('selected'));
     
     // Loop thru task array and list each valid task
     for (let i=0; i<tasks.length; i++){
@@ -116,6 +131,12 @@ function DOM_ListTasks(tasks, range){
         
         // Exclude tasks which fail criteria
         if (!(range == -1 || (days_diff <= range && days_diff>-1))) continue; 
+
+        // Print project header
+        if (!headerPrinted && project != projects[0] && !isUserProject) {
+            DOM_printProjectHeader(project);
+            headerPrinted = true;
+        }
 
        
         // Create the task container
@@ -274,7 +295,8 @@ function DOM_ListProjects(){
 
         projectBtns.appendChild(editBtn);
 
-        editBtn.addEventListener('click', () => {
+        editBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // We need to stop propagation here!
             modalProject.setAttribute('modalType', 'edit');
             
             // STORE html data attribute with unique ID

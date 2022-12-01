@@ -27,5 +27,3 @@ createProjectBtn.addEventListener('click', () => {
     modalProject.showModal();    
 });
 
-
-// TODO: Feature idea: project separator when printing
