@@ -307,6 +307,13 @@ dialog #cancel:hover{
     background-color: var(--card-color);
 }
 
+.projectSeparator{
+    font-size: 20px;
+    border-bottom: 1px dashed;
+    padding-bottom: .2em;
+    margin: .2em 0;
+}
+
 /* --------------CARD LEFT--------------------- */
 
 .taskTitle{
