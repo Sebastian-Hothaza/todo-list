@@ -28,6 +28,4 @@ createProjectBtn.addEventListener('click', () => {
 });
 
 
-// TODO: Feature idea: when killing some project, lets not go back to working project = the inbox
-
 // TODO: Feature idea: project separator when printing

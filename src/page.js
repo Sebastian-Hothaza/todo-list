@@ -299,11 +299,12 @@ function DOM_ListProjects(){
         deleteBtn.addEventListener('click', (e) => {
             e.stopPropagation(); // We need to stop propagation here!
 
-            removeProject(projects[i]);
+            // If we are the workingProject, set it to the inbox
+            if (workingProject == projects[i]) workingProject = projects[0];
 
+            removeProject(projects[i]);
             resetSelection();
             allTasksBtn.classList.add('selected');
-            workingProject = projects[0];
             
             DOM_ListProjects();
             DOM_Update();
