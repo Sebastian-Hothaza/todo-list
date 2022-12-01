@@ -54,7 +54,7 @@ function createProject(){
 // Updates a project using info from modal
 function editProject(){
     // Get the project we want to edit
-    const project = projects.find(item => item.uuid == modalProject.getAttribute('uuid'));;
+    const project = projects.find(item => item.uuid == modalProject.getAttribute('uuid'));
 
     // Update the project with the new params
     project.title = (document.querySelector('#modalProject #modalTitle').value);

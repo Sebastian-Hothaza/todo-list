@@ -16,7 +16,6 @@ const taskItemFactory = (title, desc, date, priority) => {
         }else{
             complete = true;
         }
-        console.log("set task "+title+" complete to: "+complete);
     }
     function togglePriority(){
         if (priority){
@@ -70,6 +69,8 @@ function editTask(){
             break;
         }
     }
+
+    //TODO: const project = projects.find(item => item.uuid == modalProject.getAttribute('uuid'));
 
     // Update the task with the new params
     task.title = (document.querySelector('#modal #modalTitle').value);

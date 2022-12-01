@@ -31,3 +31,9 @@ createProjectBtn.addEventListener('click', () => {
     modalProject.showModal();    
 });
 
+/*
+*** A note about UUID ***
+UUID is required since once a task is stored in LS, that UUID persists with it.
+When we create new task from LS_load, if we don't re-use that UUID, we get a random one to which the delete btn associates with.
+Thus when we click delete, the UUID doesn't match and we cannot update the LS to remove it
+*/

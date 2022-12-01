@@ -142,7 +142,6 @@ function DOM_ListTasks(project, range){
         const taskContainer = document.createElement('div');
         taskContainer.classList.add('taskContainer');
        
-        taskContainer.setAttribute('uuid', tasks[i].uuid); //We can likely remove this
         tasks[i].complete? taskContainer.classList.add('taskComplete') : taskContainer.classList.remove('taskComplete')
         tasks[i].priority? taskContainer.classList.add('taskPriority') : taskContainer.classList.remove('taskPriority')
 
@@ -254,7 +253,6 @@ function DOM_ListProjects(){
     for (let i=1; i<projects.length; i++){
 
         const projectContainer = document.createElement('div');
-        projectContainer.setAttribute('uuid', projects[i].uuid);
         projectContainer.classList.add('projectContainer');
         
 
