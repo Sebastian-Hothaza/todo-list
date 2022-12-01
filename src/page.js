@@ -64,7 +64,7 @@ clearCompleteBtn.addEventListener('click', () => {
     projects.forEach((project) => {
         // Go through each task in the project
         for (let i=0; i<project.tasks.length; ){
-            if (project.tasks[i].priority){
+            if (project.tasks[i].complete){
                 removeTask(project.tasks[i]); 
                 continue;
             }
@@ -138,7 +138,6 @@ function DOM_ListTasks(project, range){
             headerPrinted = true;
         }
 
-       
         // Create the task container
         const taskContainer = document.createElement('div');
         taskContainer.classList.add('taskContainer');

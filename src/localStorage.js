@@ -5,25 +5,12 @@ import { taskItemFactory } from "./task";
 
 // Adds task object to existing project 
 function LS_addTask(project, task){
-    // let LS_key;
-    // (project == inbox)? LS_key=project.title : LS_key=project.uuid
+    let LS_key;
+    (project == inbox)? LS_key=project.title : LS_key=project.uuid
 
-    // let fetchedTasks = JSON.parse(localStorage.getItem(project.title) || "[]"); //TODO: WHY THE || [] is needed?
-    // fetchedTasks.push(task);
-    // localStorage.setItem(LS_key, JSON.stringify(fetchedTasks));
-
-    // We differentiate between inbox and custom project tasks
-    if (project == inbox){
-        let fetchedArray = JSON.parse(localStorage.getItem(project.title) || "[]");
-        fetchedArray.push(task);
-        localStorage.setItem(project.title, JSON.stringify(fetchedArray));
-    }else{
-        // TODO: This should be able to be simplified
-        let fetchedArray = JSON.parse(localStorage.getItem(project.uuid) || "[]");
-        fetchedArray.push(task);
-        localStorage.setItem(project.uuid, JSON.stringify(fetchedArray));
-    }
-
+    let fetchedTasks = JSON.parse(localStorage.getItem(LS_key) || "[]"); //TODO: WHY THE || [] is needed?
+    fetchedTasks.push(task);
+    localStorage.setItem(LS_key, JSON.stringify(fetchedTasks));
 }
 
 // Updates the LS in a project with given task containing updated info
@@ -131,7 +118,7 @@ function LS_load(){
                 // console.log("--building new task: "+tasks[j].title);
                 let loadedTask = taskItemFactory(tasks[j].title, tasks[j].desc, tasks[j].date, tasks[j].priority);
                 loadedTask.uuid = tasks[j].uuid; //TODO: THIS IS BROKEN AND DOES NOTHING ? NO! It does!
-                loadedTask.complete = tasks[i].complete;
+                loadedTask.complete = tasks[j].complete;
                 // Append the newly loaded object to the project
                 loadedProject.appendTask(loadedTask);
             }

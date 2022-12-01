@@ -16,6 +16,7 @@ const taskItemFactory = (title, desc, date, priority) => {
         }else{
             complete = true;
         }
+        console.log("set task "+title+" complete to: "+complete);
     }
     function togglePriority(){
         if (priority){
