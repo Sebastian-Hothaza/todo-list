@@ -72,8 +72,9 @@ dialog{
     margin : auto auto;
     padding: 3em;
 
-    display: flex;
-    flex-direction: column;
+    /* The two below cause modal to be always shown! */
+    /* display: flex; */
+    /* flex-direction: column; */
     gap: 3em;
     border-radius: 10px;
 }

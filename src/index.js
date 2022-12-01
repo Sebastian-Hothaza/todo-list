@@ -33,4 +33,4 @@ createProjectBtn.addEventListener('click', () => {
 
 // TODO: Feature idea: when killing some project, lets not go back to working project = the inbox
 
-// TODO: confirm and cancel dont put away the modal properly (user can hit confirm on invalid input and task is created; also cant hit cancel to exit modal)
+// TODO: user can hit confirm on invalid input and task is created

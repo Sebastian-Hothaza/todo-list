@@ -10,17 +10,28 @@ const modalConfirmBtn = document.querySelector('#modal #Confirm');
 const modalProjectConfirmBtn = document.querySelector('#modalProject #Confirm');
 
 modalConfirmBtn.addEventListener('click', () => {
+    if (!(document.querySelector('#modal #modalTitle').value)) {
+        console.log("EMPTY TASK TITLE, REFUSE TO CREATE OBJ");
+        return;
+    }
     (modal.getAttribute('modalType') == 'create') ? createTask(workingProject) : editTask();
     DOM_Update();
     resetModal();
 });
 
 modalProjectConfirmBtn.addEventListener('click', () => {
+    if (!(document.querySelector('#modalProject #modalTitle').value)) {
+        console.log("EMPTY PROJECT TITLE, REFUSE TO CREATE OBJ");
+        return;
+    }
+
+
     (modalProject.getAttribute('modalType') == 'create') ? createProject() : editProject();
     workingProject = projects[projects.length - 1];
     DOM_ListProjects();
     DOM_Update();
     resetModalProject();
+    //modalProject.close();
 });
 // -----------------------------------------------------------------------------
 

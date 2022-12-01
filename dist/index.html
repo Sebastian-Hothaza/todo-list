@@ -45,7 +45,7 @@
 
             <div class="formPair">
                 <label for="modalTitle">Title</label>
-                <input type="text" id="modalTitle" name="title" placeholder="Buy Apples" required>
+                <input type="text" id="modalTitle" name="title" placeholder="Buy Apples">
             </div>
             
             <div class="formPair">
@@ -64,24 +64,25 @@
             </div>
 
             <button type="submit" id="Confirm">Add Task</button>
-            <button id="cancel">Cancel</button>
+            <button onclick="window.modal.close();"id="cancel">Cancel</button>
         </form>
     </dialog>
+
+    
 
     <dialog id="modalProject" modalType="create">
         <div id="heading">HEADING</div>
         <form method="dialog">
-
             <div class="formPair">
                 <label for="modalTitle">Title</label>
-                <input type="text" id="modalTitle" name="modalTitle" placeholder="Grocery List" required>
+                <input type="text" id="modalTitle" name="modalTitle" placeholder="Grocery List">
             </div>
-            
-
             <button type="submit" id="Confirm">Add Project</button>
-            <button id="cancel">Cancel</button>
+            <button onclick="window.modalProject.close();" id="cancel">Cancel</button>
         </form>
+        
     </dialog>
+
 
     
     
