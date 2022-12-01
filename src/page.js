@@ -1,4 +1,4 @@
-export { DOM_Update, DOM_ListProjects }
+export { DOM_Update, DOM_ListProjects, HOTKEY_selectAllTasks, HOTKEY_selectTdyTasks, HOTKEY_selectWeekTasks }
 import { createTask, editTask, removeTask, toggleCompleteTask } from "./task";
 import { createProject, editProject, removeProject, projects } from "./project";
 import { format } from 'date-fns';
@@ -44,6 +44,14 @@ allTasksBtn.addEventListener('click', () => {
     DOM_Update();
 });
 
+function HOTKEY_selectAllTasks(){
+     // CSS styling
+     resetSelection();
+     allTasksBtn.classList.add('selected');
+     workingProject = projects[0];
+     DOM_Update();
+}
+
 todayBtn.addEventListener('click', () => {
     // CSS styling
     resetSelection();
@@ -52,6 +60,14 @@ todayBtn.addEventListener('click', () => {
     DOM_Update();
 });
 
+function HOTKEY_selectTdyTasks(){
+    // CSS styling
+    resetSelection();
+    todayBtn.classList.add('selected');
+    workingProject = projects[0];
+    DOM_Update();
+}
+
 thisWeekBtn.addEventListener('click', () => {
     // CSS styling
     resetSelection();
@@ -59,6 +75,14 @@ thisWeekBtn.addEventListener('click', () => {
     workingProject = projects[0];
     DOM_Update();
 });
+
+function HOTKEY_selectWeekTasks(){
+    // CSS styling
+    resetSelection();
+    thisWeekBtn.classList.add('selected');
+    workingProject = projects[0];
+    DOM_Update();
+}
 
 clearCompleteBtn.addEventListener('click', () => {
     projects.forEach((project) => {

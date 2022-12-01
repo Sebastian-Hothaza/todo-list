@@ -1,4 +1,4 @@
-import { DOM_Update, DOM_ListProjects } from "./page";
+import { DOM_Update, DOM_ListProjects, HOTKEY_selectAllTasks, HOTKEY_selectTdyTasks, HOTKEY_selectWeekTasks } from "./page";
 import { LS_load } from "./localStorage"
 
 const createTaskBtn = document.querySelector('#createTask');
@@ -30,6 +30,34 @@ createProjectBtn.addEventListener('click', () => {
     document.querySelector('#modalProject #heading').textContent = 'Create New Project';
     modalProject.showModal();    
 });
+
+// Hotkey support
+document.addEventListener('keydown', (e) => {
+    if (modal.hasAttribute('open') || modalProject.hasAttribute('open')) return;
+    switch (e.key){
+        case 't':
+            modal.setAttribute('modalType', 'create');
+            document.querySelector('#modal #heading').textContent = 'Create New Task';
+            modal.showModal();
+            break;
+        case 'p':
+            modalProject.setAttribute('modalType', 'create');
+            document.querySelector('#modalProject #heading').textContent = 'Create New Project';
+            modalProject.showModal(); 
+            break;
+        case '1':
+            HOTKEY_selectAllTasks();
+            break;
+        case '2':
+            HOTKEY_selectTdyTasks();
+            break;    
+        case '3':
+            HOTKEY_selectWeekTasks();
+            break;        
+    }
+    e.preventDefault();
+    
+}, false);
 
 /*
 *** A note about UUID ***
