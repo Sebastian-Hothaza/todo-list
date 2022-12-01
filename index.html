@@ -7,11 +7,12 @@
     <title>ToDo List</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"/>
+    <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet"> 
     <script src="main.js" defer></script>
 </head>
 <body>
     <div class="main">
-        <div class="header">To-Do List</div>
+        <div class="header">Welcome! Let's get something done today.</div>
 
         <div class="sidebar">
             <div class="selected" id="allTasks"><span class="material-icons-outlined"> home </span>All Tasks</div>
@@ -22,16 +23,16 @@
             <div id="projectList">
                 <!-- CONTENT INJECTED HERE IN JS -->
             </div>
-            <div id="createProject" style="font-weight: 100; margin-left: 1.3em; padding: 5px;">+ Add Project</div>
-            <button id="clearComplete">Clear Complete Tasks</button>
-            <button id="resetStorage">Reset Local Storage</button>
+            <div id="createProject">+ Add Project</div>
+            <button id="clearComplete">Remove Completed Tasks<span class="material-icons-outlined"> check_circle </span></button>
+            <button id="resetStorage">Reset Local Storage<span class="material-icons-outlined"> delete_forever </span></button>
         </div>
 
         <div class="content">
             <div id="taskList">
                 <!-- CONTENT INJECTED HERE IN JS -->
             </div>
-            <div id="createTask">+ Create Task</div>
+            <div id="createTask">+ Add Task</div>
             
             
         </div>
