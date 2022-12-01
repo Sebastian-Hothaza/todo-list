@@ -10,20 +10,21 @@ const modalForm = document.querySelector('#taskForm');
 const modalProjectForm = document.querySelector('#projectForm');
 
 modalForm.addEventListener('submit', () => {
-    
     (modal.getAttribute('modalType') == 'create') ? createTask(workingProject) : editTask();
     DOM_Update();
     resetModal();
 });
 
 modalProjectForm.addEventListener('submit', () => {
-    
-    (modalProject.getAttribute('modalType') == 'create') ? createProject() : editProject();
-    workingProject = projects[projects.length - 1];
+    if ((modalProject.getAttribute('modalType') == 'create')){
+        createProject();
+        workingProject = projects[projects.length - 1];
+    }else{
+        editProject();
+    }
     DOM_ListProjects();
     DOM_Update();
     resetModalProject();
-    //modalProject.close();
 });
 // -----------------------------------------------------------------------------
 

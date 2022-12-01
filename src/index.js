@@ -27,9 +27,6 @@ createProjectBtn.addEventListener('click', () => {
     modalProject.showModal();    
 });
 
-// TODO: FIX BUG WHERE Clear completed task not working correctly on multiple items!
-
-// TODO: Bug fix where editing a project name will then set the active project to the last project in the list (?)
 
 // TODO: Feature idea: when killing some project, lets not go back to working project = the inbox
 
