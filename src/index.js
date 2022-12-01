@@ -16,14 +16,14 @@ if (localStorage.length){
 // Create task
 createTaskBtn.addEventListener('click', () => {
     modal.setAttribute('modalType', 'create');
-    document.querySelector('#modal #heading').textContent = 'Create new task';
+    document.querySelector('#modal #heading').textContent = 'Create New Task';
     modal.showModal();
 });
 
 // Create project
 createProjectBtn.addEventListener('click', () => {
     modalProject.setAttribute('modalType', 'create');
-    document.querySelector('#modalProject #heading').textContent = 'Create new Project';
+    document.querySelector('#modalProject #heading').textContent = 'Create New Project';
     modalProject.showModal();    
 });
 
@@ -32,3 +32,5 @@ createProjectBtn.addEventListener('click', () => {
 // TODO: Bug fix where editing a project name will then set the active project to the last project in the list (?)
 
 // TODO: Feature idea: when killing some project, lets not go back to working project = the inbox
+
+// TODO: confirm and cancel dont put away the modal properly (user can hit confirm on invalid input and task is created; also cant hit cancel to exit modal)
