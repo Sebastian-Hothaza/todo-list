@@ -87,44 +87,36 @@ function LS_addProjectUUID(uuid){
 
 // Load from LS
 function LS_load(){
-    // Load inbox if it exists. NOTE: It always exists if LS_load is called!
-    if (localStorage.getItem("inbox")){
-        console.log("Inbox exists. Loading it now");
-        let LS_tasks = JSON.parse(localStorage.getItem("inbox"));
-        for (let i=0; i<LS_tasks.length; i++){
-            let loadedTask = taskItemFactory(LS_tasks[i].title, LS_tasks[i].desc, LS_tasks[i].date, LS_tasks[i].priority);
-            loadedTask.uuid = LS_tasks[i].uuid;  //TODO: THIS IS BROKEN AND DOES NOTHING ? NO! It does!
-            loadedTask.complete = LS_tasks[i].complete;
-            inbox.appendTask(loadedTask);
-        }
-    } 
-    
+    // Load inbox 
+    let LS_inboxTasks = JSON.parse(localStorage.getItem("inbox"));
+    for (let i=0; i<LS_inboxTasks.length; i++){
+        let loadedTask = taskItemFactory(LS_inboxTasks[i].title, LS_inboxTasks[i].desc, LS_inboxTasks[i].date, LS_inboxTasks[i].priority);
+        loadedTask.uuid = LS_inboxTasks[i].uuid; 
+        loadedTask.complete = LS_inboxTasks[i].complete;
+        inbox.appendTask(loadedTask);
+    }
+     
+    // If there are no user projects to load, we are done
+    if (!(JSON.parse(localStorage.getItem("projectsOrder")))) return;
 
-    // Check if user projects exist
-    if (JSON.parse(localStorage.getItem("projectsOrder"))){
-        // Load UUID array and iterate thought it
-        const objectsOrder = JSON.parse(localStorage.getItem("projectsOrder"));
-        for (let i=0; i<objectsOrder.length; i++){
-            
-            // for each UUID, load in the project
-            let loadedProject = projectFactory(JSON.parse(localStorage.getItem(objectsOrder[i]))[0].title);
-            loadedProject.uuid = objectsOrder[i]; //TODO: THIS IS BROKEN AND DOES NOTHING ? NO! It does!
-            loadedProject.addSelf();
+    // Load user projects in order of which they were originally created (specified by projectsOrder)
+    const objectsOrder = JSON.parse(localStorage.getItem("projectsOrder"));
 
-            // Task loading
-            let tasks = JSON.parse(localStorage.getItem(objectsOrder[i]));
-            console.log("start loading tasks for project "+loadedProject.title);
-            for (let j=1; j<tasks.length; j++){
-                // console.log("--building new task: "+tasks[j].title);
-                let loadedTask = taskItemFactory(tasks[j].title, tasks[j].desc, tasks[j].date, tasks[j].priority);
-                loadedTask.uuid = tasks[j].uuid; //TODO: THIS IS BROKEN AND DOES NOTHING ? NO! It does!
-                loadedTask.complete = tasks[j].complete;
-                // Append the newly loaded object to the project
-                loadedProject.appendTask(loadedTask);
-            }
-            
+    // Go through the UUID's and load in the corresponding project and its tasks
+    for (let i=0; i<objectsOrder.length; i++){
+        // for each UUID, load in the project
+        let loadedProject = projectFactory(JSON.parse(localStorage.getItem(objectsOrder[i]))[0].title); //why 0 here?
+        loadedProject.uuid = objectsOrder[i]; 
+        loadedProject.addSelf();
+
+        // Task loading
+        let LS_tasks = JSON.parse(localStorage.getItem(objectsOrder[i]));
+        
+        for (let j=1; j<LS_tasks.length; j++){
+            let loadedTask = taskItemFactory(LS_tasks[j].title, LS_tasks[j].desc, LS_tasks[j].date, LS_tasks[j].priority);
+            loadedTask.uuid = LS_tasks[j].uuid; 
+            loadedTask.complete = LS_tasks[j].complete;
+            loadedProject.appendTask(loadedTask);
         }
     }
-    
 }
-
