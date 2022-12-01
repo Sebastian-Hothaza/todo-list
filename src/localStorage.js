@@ -7,9 +7,9 @@ import { taskItemFactory } from "./task";
 function LS_addTask(project, task){
     // We differentiate between inbox and custom project tasks
     if (project == inbox){
-        let fetchedArray = JSON.parse(localStorage.getItem(project.getName()) || "[]");
+        let fetchedArray = JSON.parse(localStorage.getItem(project.title) || "[]");
         fetchedArray.push(task);
-        localStorage.setItem(project.getName(), JSON.stringify(fetchedArray));
+        localStorage.setItem(project.title, JSON.stringify(fetchedArray));
     }else{
         // TODO: This should be able to be simplified
         let fetchedArray = JSON.parse(localStorage.getItem(project.uuid) || "[]");
@@ -72,7 +72,7 @@ function LS_addProject(project){
 // Updates the LS for a project with updated info
 function LS_editProject(project){
     let fetchedArray = JSON.parse(localStorage.getItem(project.uuid));
-    fetchedArray[0].title = project.getName();
+    fetchedArray[0].title = project.title;
     localStorage.setItem(project.uuid, JSON.stringify(fetchedArray));
 }
 
@@ -119,7 +119,7 @@ function LS_load(){
 
             // Task loading
             let tasks = JSON.parse(localStorage.getItem(objectsOrder[i]));
-            // console.log("start loading tasks for project "+loadedProject.getName());
+            // console.log("start loading tasks for project "+loadedProject.title);
             for (let j=1; j<tasks.length; j++){
                 // console.log("--building new task: "+tasks[j].title);
                 let loadedTask = taskItemFactory(tasks[j].title, tasks[j].desc, tasks[j].date, tasks[j].priority);

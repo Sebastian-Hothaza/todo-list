@@ -7,15 +7,9 @@ const projectFactory = (title) => {
     let uuid = self.crypto.randomUUID();
     let tasks = [];
 
-    
-
     function appendTask(task){
         tasks.push(task);
     }
-
-
-    // Returns all tasks associated with that project
-    function getTasks(){ return tasks; }
 
     // Returns single task object matching id 
     function getTask(id){
@@ -26,20 +20,19 @@ const projectFactory = (title) => {
         tasks = tasks.filter(task => task.uuid != id); 
     }
 
-    function getName(){
-        return title;
-    }
-
-    function setName(newTitle){
-        title = newTitle;
-    }
-
-    function addSelf(){
+    
+    //TODO: can we do this as part of CTOR?
+    function addSelf(){ 
         projects.push(this);
     }
 
     
-    return { uuid, title, appendTask, getTasks, getTask, getName, setName, addSelf, removeTask};
+    return { 
+        get title(){return title;}, set title(newTitle){title=newTitle},
+        get uuid(){return uuid;}, set uuid(newUuid){uuid=newUuid},
+        get tasks(){return tasks;}, getTask,
+        appendTask, addSelf, removeTask
+    };
 };
 
 const inbox = projectFactory('inbox');
@@ -64,7 +57,7 @@ function editProject(){
     const project = projects.find(item => item.uuid == modalProject.getAttribute('uuid'));;
 
     // Update the project with the new params
-    project.setName(document.querySelector('#modalProject #modalTitle').value);
+    project.title = (document.querySelector('#modalProject #modalTitle').value);
 
     // Update edited project to localStorage. 
     LS_editProject(project);

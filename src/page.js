@@ -63,9 +63,9 @@ thisWeekBtn.addEventListener('click', () => {
 clearCompleteBtn.addEventListener('click', () => {
     projects.forEach((project) => {
         // Go through each task in the project
-        for (let i=0; i<project.getTasks().length; ){
-            if (project.getTasks()[i].priority){
-                removeTask(project.getTasks()[i]); 
+        for (let i=0; i<project.tasks.length; ){
+            if (project.tasks[i].priority){
+                removeTask(project.tasks[i]); 
                 continue;
             }
             i++; // We increment i only if item not found
@@ -99,7 +99,7 @@ function DOM_Update(){
 function DOM_printProjectHeader(project){
     const taskList = document.querySelector('#taskList');
     const projSep = document.createElement('div');
-    projSep.innerText = project.getName();
+    projSep.innerText = project.title;
     projSep.classList.add('projectSeparator');
     taskList.appendChild(projSep);
 }
@@ -111,7 +111,7 @@ function DOM_printProjectHeader(project){
 function DOM_ListTasks(project, range){
     const taskList = document.querySelector('#taskList');
     let headerPrinted = false;
-    let tasks = project.getTasks(); //TODO: Simplify in here, maybe use forEach
+    let tasks = project.tasks; //TODO: Simplify in here, maybe use forEach
 
     let isUserProject = !(document.querySelector('#allTasks').classList.contains('selected') || 
                         document.querySelector('#today').classList.contains('selected') || 
@@ -276,7 +276,7 @@ function DOM_ListProjects(){
 
         // Title
         const projectTitle = document.createElement('div');
-        projectTitle.innerText=projects[i].getName();
+        projectTitle.innerText=projects[i].title;
         projectTitle.classList.add('projectTitle');
         projectContainer.append(projectTitle);
 
@@ -304,7 +304,7 @@ function DOM_ListProjects(){
 
             // Set heading accordingly and pre-load fields with our projects content
             document.querySelector('#modalProject #heading').textContent = 'Edit project';
-            document.querySelector('#modalProject #modalTitle').value = projects[i].getName();
+            document.querySelector('#modalProject #modalTitle').value = projects[i].title;
 
 
             modalProject.showModal();
