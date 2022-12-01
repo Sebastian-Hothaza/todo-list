@@ -3,40 +3,13 @@ import { LS_addTask, LS_editTask, LS_removeTask } from "./localStorage"
 import { projects } from "./project";
 
 
-const taskItemFactory = (title, desc, date, priority, complete) => {
-    let uuid = self.crypto.randomUUID();
+const taskItemFactory = (title, desc, date, priority) => {
+    // NOTE: These defaults will need to be loaded in when recall from LocalStorage
+    let uuid = self.crypto.randomUUID(); 
+    let complete = false; 
+
+    // TODO: Can we get rid of/simply these toggles?
     
-    function getName(){
-        return title;
-    }
-    function setName(newName){
-        title = newName;
-    }
-    function getDate(){
-        return date;
-    }
-    function setDate(newDate){
-        date = newDate;
-    }
-
-    function getDesc(){
-        return desc;
-    }
-    function setDesc(newDesc){
-        desc = newDesc;
-    }
-
-    function isPriority(){
-        return priority;
-    }
-    function setPriority(newPriority){
-        priority = newPriority;
-    }
-
-    function isComplete(){
-        return complete;
-    }
-
     function toggleComplete(){
         if (complete){
             complete = false;
@@ -52,15 +25,17 @@ const taskItemFactory = (title, desc, date, priority, complete) => {
         }
     }
 
-    function markComplete(){
-        complete = true;
-    }
+    return {
+        get title(){return title;}, set title(newTitle){title=newTitle},
+        get desc(){return desc;}, set desc(newDesc){desc=newDesc},
+        get date(){return date;}, set date(newDate){date=newDate},
+        get priority(){return priority;}, set priority(newPriority){priority=newPriority},
 
-    function markIncomplete(){
-        complete = false;
-    }
-
-    return { uuid, title, desc, date, priority, complete, getName, setName, getDate, setDate, getDesc, setDesc,isPriority, setPriority, togglePriority, isComplete, toggleComplete, markComplete, markIncomplete };
+        get complete(){return complete;}, set complete(newComplete){complete=newComplete},
+        get uuid(){return uuid;}, set uuid(newUuid){uuid=newUuid},
+        
+        toggleComplete, togglePriority
+    };
 };
 
 // Creates a task using info from modal for a project
@@ -72,7 +47,7 @@ function createTask(project){
     const priority = document.querySelector('#modal #modalPriority').checked;
     
     // Create task object
-    const newTask = taskItemFactory(title, desc, date, priority, false);
+    const newTask = taskItemFactory(title, desc, date, priority);
 
     // Append the newly created task to localStorage. 
     LS_addTask(project, newTask);
@@ -96,10 +71,10 @@ function editTask(){
     }
 
     // Update the task with the new params
-    task.setName(document.querySelector('#modal #modalTitle').value);
-    task.setDate(document.querySelector('#modal #modalDate').value);
-    task.setDesc(document.querySelector('#modal #modalDesc').value);
-    task.setPriority(document.querySelector('#modal #modalPriority').checked);
+    task.title = (document.querySelector('#modal #modalTitle').value);
+    task.desc = (document.querySelector('#modal #modalDesc').value);
+    task.date = (document.querySelector('#modal #modalDate').value);
+    task.priority = (document.querySelector('#modal #modalPriority').checked);
 
 
     // Update edited task to localStorage. 
@@ -156,26 +131,3 @@ function togglePriorityTask(task){
     // Update the LS
     LS_editTask(project,task);
 }
-
-
-// TODO: Privatize elements as follows:
-
-/*
-
-check: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get
-
-const objectFactory = (value) =>{
-    function getValue(){ return value; }
-    function setValue(newValue){ value=newValue; }
-    const toJSON = () => {
-        return JSON.stringify({value})
-    }
-    return { getValue, setValue, toJSON }
-};
-
-const myObject = objectFactory("John");
-
-*/
-
-
-

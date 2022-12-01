@@ -64,7 +64,7 @@ clearCompleteBtn.addEventListener('click', () => {
     projects.forEach((project) => {
         // Go through each task in the project
         for (let i=0; i<project.getTasks().length; ){
-            if (project.getTasks()[i].isComplete()){
+            if (project.getTasks()[i].priority){
                 removeTask(project.getTasks()[i]); 
                 continue;
             }
@@ -121,7 +121,7 @@ function DOM_ListTasks(project, range){
     for (let i=0; i<tasks.length; i++){
         
         // Convert due date into a date object so we can work with it
-        var parts = tasks[i].getDate().split('-');
+        var parts = tasks[i].date.split('-');
         var dueDate = new Date(parts[0], parts[1] - 1, parts[2]); 
         const time_diff = dueDate.getTime()-new Date().getTime();
         const days_diff = time_diff / (1000 * 3600 * 24);
@@ -144,8 +144,8 @@ function DOM_ListTasks(project, range){
         taskContainer.classList.add('taskContainer');
        
         taskContainer.setAttribute('uuid', tasks[i].uuid); //We can likely remove this
-        tasks[i].isComplete()? taskContainer.classList.add('taskComplete') : taskContainer.classList.remove('taskComplete')
-        tasks[i].isPriority()? taskContainer.classList.add('taskPriority') : taskContainer.classList.remove('taskPriority')
+        tasks[i].complete? taskContainer.classList.add('taskComplete') : taskContainer.classList.remove('taskComplete')
+        tasks[i].priority? taskContainer.classList.add('taskPriority') : taskContainer.classList.remove('taskPriority')
 
         // COMPLETE
         const toggleCompleteBtn = document.createElement('button');
@@ -153,7 +153,7 @@ function DOM_ListTasks(project, range){
         
         const completeIcon = document.createElement('span');
         completeIcon.classList.add("material-icons-outlined");
-        tasks[i].isComplete()? completeIcon.textContent = 'check_circle' : completeIcon.textContent = 'circle'
+        tasks[i].complete? completeIcon.textContent = 'check_circle' : completeIcon.textContent = 'circle'
         toggleCompleteBtn.appendChild(completeIcon);
 
         taskContainer.appendChild(toggleCompleteBtn);
@@ -172,14 +172,14 @@ function DOM_ListTasks(project, range){
 
         const taskTitle = document.createElement('div');
         taskTitle.classList.add('taskTitle');
-        taskTitle.textContent = tasks[i].getName();
+        taskTitle.textContent = tasks[i].title;
         cardLeft.appendChild(taskTitle);
 
         // Only add Desc to DOM if it exists
-        if (tasks[i].getDesc()){
+        if (tasks[i].desc){
             const taskDesc = document.createElement('div');
             taskDesc.classList.add('taskDesc');
-            taskDesc.textContent = tasks[i].getDesc();
+            taskDesc.textContent = tasks[i].desc;
             cardLeft.appendChild(taskDesc);
         }
 
@@ -192,7 +192,7 @@ function DOM_ListTasks(project, range){
     
         const taskDate = document.createElement('div');
         taskDate.classList.add('taskDate');
-        taskDate.textContent = tasks[i].getDate();
+        taskDate.textContent = tasks[i].date;
         cardRight.appendChild(taskDate);
 
         //EDIT
@@ -210,10 +210,10 @@ function DOM_ListTasks(project, range){
 
             // Set heading accordingly and pre-load fields with our tasks content
             document.querySelector('#modal #heading').textContent = 'Edit task';
-            document.querySelector('#modal #modalTitle').value = tasks[i].getName();
-            document.querySelector('#modal #modalDate').value = tasks[i].getDate();
-            document.querySelector('#modal #modalDesc').value = tasks[i].getDesc();
-            document.querySelector('#modal #modalPriority').checked = tasks[i].isPriority();
+            document.querySelector('#modal #modalTitle').value = tasks[i].title;
+            document.querySelector('#modal #modalDate').value = tasks[i].date;
+            document.querySelector('#modal #modalDesc').value = tasks[i].desc;
+            document.querySelector('#modal #modalPriority').checked = tasks[i].priority;
 
 
             modal.showModal();
