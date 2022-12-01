@@ -3,8 +3,6 @@ import { LS_addProject, LS_editProject, LS_removeProject } from "./localStorage"
 
 let projects = [];
 
-// Todo: Why arent we exporting delete Project?
-
 const projectFactory = (title) => {
     let uuid = self.crypto.randomUUID();
     let tasks = [];

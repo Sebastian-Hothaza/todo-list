@@ -60,17 +60,17 @@ thisWeekBtn.addEventListener('click', () => {
 });
 
 clearCompleteBtn.addEventListener('click', () => {
-    // Go through all projects and only keep tasks who are not marked complete
-    for (let i=0; i<projects.length; i++){
+    projects.forEach((project) => {
         // Go through each task in the project
-        for (let j=0; j<projects[i].getTasks().length; j++){
-            if (projects[i].getTasks()[j].isComplete()){
-                removeTask(projects[i].getTasks()[j]);
-                DOM_Update();
+        for (let i=0; i<project.getTasks().length; ){
+            if (project.getTasks()[i].isComplete()){
+                removeTask(project.getTasks()[i]); 
+                continue;
             }
+            i++; // We increment i only if item not found
         }
-    }
-    
+    });
+    DOM_Update();
 });
 
 resetStorageBtn.addEventListener('click', () => {

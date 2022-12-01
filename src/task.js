@@ -107,7 +107,7 @@ function editTask(){
  
 }
 
-// Removes a task by uuid from project
+// Removes a task from project
 function removeTask(task){
     let project;
     // Check each project to see where the task is located
