@@ -228,30 +228,47 @@ function DOM_ListProjects(){
 
     // Go through projects array and list each project. Skip 0 as it is inbox
     for (let i=1; i<projects.length; i++){
-        const project = document.createElement('li');
-        project.innerText = projects[i].getName();
-        project.setAttribute('uuid', projects[i].uuid);
+
+        const projectContainer = document.createElement('div');
+        //projectContainer.setAttribute('uuid', projects[i].uuid); ADD THIS BACK IN!     <---------
+        projectContainer.classList.add('projectContainer');
+        
 
         // CSS Styling
         if (workingProject == projects[i]) {
             resetSelection();
-            project.classList.add('selected');
+            projectContainer.classList.add('selected');
         }
         
-        // Create listener for project
-        project.addEventListener('click', () => {
+        // Create listener for project. This may be an issue due to event bubbling
+        projectContainer.addEventListener('click', () => {
             // CSS Styling
             resetSelection();
-            project.classList.add('selected');
+            projectContainer.classList.add('selected');
             workingProject = projects[i];
             DOM_Update();
         });
+
+        // Title
+        const projectTitle = document.createElement('div');
+        projectTitle.innerText=projects[i].getName();
+        projectTitle.classList.add('projectTitle');
+        projectContainer.append(projectTitle);
+
+        // Button groups
+        const projectBtns = document.createElement('div');
+        projectBtns.classList.add('projectBtns');
         
 
         //EDIT
         const editBtn = document.createElement('button');
-        editBtn.textContent = 'edit';
-        project.appendChild(editBtn);
+
+        const editBtnIcon = document.createElement('span');
+        editBtnIcon.classList.add("material-icons-outlined");
+        editBtnIcon.textContent = 'edit';
+        editBtn.appendChild(editBtnIcon);
+
+        projectBtns.appendChild(editBtn);
 
         editBtn.addEventListener('click', () => {
             modalProject.setAttribute('modalType', 'edit');
@@ -269,8 +286,11 @@ function DOM_ListProjects(){
 
         //DELETE
         const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'delete';
-        project.appendChild(deleteBtn);
+        const deleteBtnIcon = document.createElement('span');
+        deleteBtnIcon.classList.add("material-icons-outlined");
+        deleteBtnIcon.textContent = 'delete';
+        deleteBtn.appendChild(deleteBtnIcon);
+        projectBtns.appendChild(deleteBtn);
 
         deleteBtn.addEventListener('click', (e) => {
             e.stopPropagation(); // We need to stop propagation here!
@@ -285,8 +305,11 @@ function DOM_ListProjects(){
             DOM_Update();
         });
 
+        // Done building buttons panel
+        projectContainer.appendChild(projectBtns);
+
         // DONE building elements in the project container, now append it
-        DOM_ProjectList.appendChild(project);
+        DOM_ProjectList.appendChild(projectContainer);
     }
 }
 
@@ -311,7 +334,7 @@ function resetSelection(){
     document.querySelector('#thisWeek').classList.remove('selected');
 
     // Clear custom projects
-    document.querySelectorAll('li').forEach((item) => {
+    document.querySelectorAll('div').forEach((item) => {
         item.classList.remove('selected');
     });
 }

@@ -1,9 +1,18 @@
+/* TODO
+* Fix misalignment on sidebar between main headings and projects (right edge)
+
+
+*/
+
 :root{
+    font-family: 'Alata', sans-serif;
+
     --font-light: #eee;
     --font-medium: #4f4f4f;
     --font-dark: #323232;
     
     --background-light: #d4d4d4;
+    /* --background-light: white; */
     --background-dark: #323232;
     --card-color: white;
 
@@ -17,21 +26,22 @@
 * {
     margin: 0px;
     padding: 0px;
-    background-color: var(--background-light);
 }
 
-li{
-    list-style: none;
-    font-weight: 100;
-    margin-left: 1.3em;
-    padding: 5px;
+button{
+    border: none;
+}
+
+.material-icons-outlined{
+    background-color: transparent;
 }
 
 .main{
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: minmax(350px, auto) 1fr;
     grid-template-rows: auto 1fr auto;
     height: 100vh;
+    background-color: var(--background-light);
 }
 
 /* ---------------------------------   HEADER & FOOTER   -------------------------------------------- */
@@ -43,6 +53,11 @@ li{
     font-weight: 800;
     font-size: 28px;
 }
+
+.header{
+    padding-left: 1em;
+}
+
 
 .footer{
     font-size: 14px;
@@ -80,7 +95,6 @@ form{
 
 /* ---------------------------------        SIDEBAR        -------------------------------------------- */
 
-
 .sidebar{
     display: flex;
     flex-direction: column;
@@ -88,48 +102,114 @@ form{
 
     font-size: 22px;
     font-weight: 800;
-    gap: 20px;
+    gap: 1em;
     
-    padding: 2em 1em;
-    color: var(--seconday-color);
+    padding: 1em 1em;
+    color: var(--font-dark);
+}
+
+.sidebar>*{
+    display: flex;
+    flex-direction: row;
+    gap: .2em;
+    align-items: center; 
+    padding: .1em .4em;
 }
 
 .sidebar .selected{
-    color: black;
-    border: solid 1px blue;
-    /* text-decoration-line: underline; */
-}
-
-.sidebar>:nth-child(-n+4){
-    display: flex;
-    gap: 10px;
-    /* align-items: center; */
+    color: var(--font-light);
+    background-color: var(--accent-color);
+    border-radius: 15px;
 }
 
 .sidebar>*:hover{
     cursor: pointer;
 }
 
+.sidebar :nth-child(4):hover{
+    cursor: default;
+}
+
+/* -----------------USER PROJECTS--------------------- */
 #projectsHeading{
-    border-top: dashed 2px;
+    border-top: dashed;
     padding-top: 1em;
 }
 
+#projectList{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+}
+
+.projectContainer{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1em;
+    padding: .2em .4em;
+}
+
+.projectTitle{
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    font-weight: 100;
+    font-size: 16px;
+}
+
+.projectBtns{
+    display: flex;
+    align-items: center;
+    gap: .3em;
+    
+}
+
+.projectBtns>*{
+    background-color: var(--background-light);
+    color: var(--font-dark);
+}
+
+.selected .projectBtns>*{
+    background-color: var(--accent-color);
+    color: var(--font-light);
+    transition: transform .2s;
+}
+
+.projectBtns>*:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+#createProject{
+    margin-top: 2em;
+    justify-content: center;
+    font-weight: 100;
+
+}
+
+
+
+
+/* -----------------BOTTOM CONTROLS--------------------- */
 #clearComplete{
+    justify-content: center;
     margin-top: auto;
-    color: var(--background-color);
-    background-color: red;
+    color: var(--font-light);
+    background-color: var(--accent-color);
     font-size: 18px;
-    border: 2px solid black;
+    border-radius: 15px;
     padding: .2em .5em;
     transition: transform .3s;
 }
 
 #resetStorage{
-    color: var(--background-color);
-    background-color: blue;
+    justify-content: center;
+    color: var(--font-light);
+    background-color: var(--accent-color-alert);
     font-size: 18px;
-    border: 2px solid black;
+    border-radius: 15px;
     padding: .2em .5em;
     transition: transform .3s;
 }
@@ -155,16 +235,16 @@ form{
     gap: 1em;
 }
 
-.taskCompleteBtn{
-    background-color: var(--card-color);
-    border: none;
-}
-
 .taskCompleteBtn .material-icons-outlined{
     display: flex;
     align-items: center;    
     font-size: 30px;
     height: 100%;
+    background-color: var(--background-light);
+}
+
+.taskCompleteBtn:hover{
+    cursor: pointer;
 }
 
 .taskCard{
@@ -216,12 +296,7 @@ form{
     margin-right: 2em;
 }
 
-.cardRight button:nth-child(2), .cardRight button:nth-child(3){
-    border: none;
-}
-
-
-.cardRight button:nth-child(2)>*, .cardRight button:nth-child(3)>*{
+.cardRight :nth-child(2)>*, .cardRight :nth-child(3)>*{
     display: flex;
     align-items: center;
     border-radius: 5px;
@@ -231,21 +306,20 @@ form{
     padding: .15em;
     transition: transform .3s;
 }
-.cardRight button:nth-child(3)>*{
+.cardRight :nth-child(3)>*{
     background-color: var(--accent-color-alert);
 }
 
-.cardRight button:nth-child(2)>*:hover{
+.cardRight :nth-child(2)>*:hover{
     background-color: var(--accent-color-hover);
-    transform: scale(1.2);
+    transform: scale(1.15);
+    cursor: pointer;
 }
-.cardRight button:nth-child(3)>*:hover{
+.cardRight :nth-child(3)>*:hover{
     background-color: var(--accent-color-alert-hover);
-    transform: scale(1.2);
+    transform: scale(1.15);
+    cursor: pointer;
 }
-
-
-
 
 .taskComplete .taskTitle, .taskComplete .taskDesc, .taskComplete .taskDate{
     text-decoration: line-through;
@@ -256,5 +330,18 @@ form{
 }
 
 #createTask{
+    display: inline-block;
     margin-top: 1em;
+    padding: .1em .8em;
+    font-size: 22px;
+    color: var(--font-light);
+    background-color: var(--accent-color);
+    border-radius: 20px;
+    transition: transform .5s;
+}
+
+#createTask:hover{
+    background-color: var(--accent-color-hover);
+    transform: scale(1.1);
+    cursor: pointer;
 }
