@@ -5,6 +5,13 @@ import { taskItemFactory } from "./task";
 
 // Adds task object to existing project 
 function LS_addTask(project, task){
+    // let LS_key;
+    // (project == inbox)? LS_key=project.title : LS_key=project.uuid
+
+    // let fetchedTasks = JSON.parse(localStorage.getItem(project.title) || "[]"); //TODO: WHY THE || [] is needed?
+    // fetchedTasks.push(task);
+    // localStorage.setItem(LS_key, JSON.stringify(fetchedTasks));
+
     // We differentiate between inbox and custom project tasks
     if (project == inbox){
         let fetchedArray = JSON.parse(localStorage.getItem(project.title) || "[]");
@@ -16,49 +23,49 @@ function LS_addTask(project, task){
         fetchedArray.push(task);
         localStorage.setItem(project.uuid, JSON.stringify(fetchedArray));
     }
+
 }
 
 // Updates the LS in a project with given task containing updated info
 function LS_editTask(project, task){
-  
-    let startingIdx;
-    let projectKey;
-    
+    let idx;
+    let LS_key;
     if (project == inbox){
-        startingIdx = 0;
-        projectKey = "inbox";
+        idx = 0;
+        LS_key = "inbox";
     }else{
-        startingIdx = 1;
-        projectKey = project.uuid;
+        idx = 1;
+        LS_key = project.uuid;
     }
     
-    let fetchedArray = JSON.parse(localStorage.getItem(projectKey));
+    let fetchedTasks = JSON.parse(localStorage.getItem(LS_key));
     
-    // go through array of tasks in the project until find matching ID, then update that task
-    for ( ; startingIdx<fetchedArray.length; startingIdx++){
-        if (fetchedArray[startingIdx].uuid == task.uuid){
+    // go through tasks in the project until find matching ID, then update that task
+    for ( ; idx<fetchedTasks.length; idx++){
+        if (fetchedTasks[idx].uuid == task.uuid){
 
             // Update the task here!
-            fetchedArray[startingIdx].title = task.title;
-            fetchedArray[startingIdx].desc = task.desc;
-            fetchedArray[startingIdx].date = task.date;
-            fetchedArray[startingIdx].priority = task.priority;
-            fetchedArray[startingIdx].complete = task.complete;
-            
+            fetchedTasks[idx].title = task.title;
+            fetchedTasks[idx].desc = task.desc;
+            fetchedTasks[idx].date = task.date;
+            fetchedTasks[idx].priority = task.priority;
+            fetchedTasks[idx].complete = task.complete;
             
             // Finally, set the item in LS
-            localStorage.setItem(projectKey, JSON.stringify(fetchedArray));
+            localStorage.setItem(LS_key, JSON.stringify(fetchedTasks));
+            break; // No need to check remaining tasks
         }
     }
 }
 
 // Updates the LS by removing the task
 function LS_removeTask(project, task){
-    let projectKey;
-    (project == inbox)? projectKey="inbox" : projectKey=project.uuid
+    let LS_key;
+    (project == inbox)? LS_key="inbox" : LS_key=project.uuid
     
-    let fetchedArray = JSON.parse(localStorage.getItem(projectKey));
-    localStorage.setItem(projectKey, JSON.stringify(fetchedArray.filter(item => item.uuid != task.uuid)));
+    let fetchedTasks = JSON.parse(localStorage.getItem(LS_key));
+    // Filter: keep items that don't match the UUID of the task we want to remove
+    localStorage.setItem(LS_key, JSON.stringify(fetchedTasks.filter(item => item.uuid != task.uuid)));
 }
 
 // Adds new project to LS
@@ -71,16 +78,17 @@ function LS_addProject(project){
 
 // Updates the LS for a project with updated info
 function LS_editProject(project){
-    let fetchedArray = JSON.parse(localStorage.getItem(project.uuid));
-    fetchedArray[0].title = project.title;
-    localStorage.setItem(project.uuid, JSON.stringify(fetchedArray));
+    let fetchedTasks = JSON.parse(localStorage.getItem(project.uuid));
+    fetchedTasks[0].title = project.title;
+    localStorage.setItem(project.uuid, JSON.stringify(fetchedTasks));
 }
 
 function LS_removeProject(project){
     localStorage.removeItem(project.uuid);
     // We also need to update projectsOrder!
-    let fetchedOrderArray = JSON.parse(localStorage.getItem("projectsOrder")); //This is an array of UUID's
-    localStorage.setItem("projectsOrder", JSON.stringify(fetchedOrderArray.filter(item => item != project.uuid)));
+    let fetchedOrder = JSON.parse(localStorage.getItem("projectsOrder")); //This is an array of UUID's
+    // Filter: keep items that don't match the UUID of the project we want to remove
+    localStorage.setItem("projectsOrder", JSON.stringify(fetchedOrder.filter(item => item != project.uuid)));
 }
 
 // Used to track order of projects by UUID so we can restore them in order
@@ -92,14 +100,14 @@ function LS_addProjectUUID(uuid){
 
 // Load from LS
 function LS_load(){
-    // Load inbox if it exists. The inbox MUST be the first item loaded? Maybe not...just that the inbox tasks must be appened to inbox. check later
+    // Load inbox if it exists. 
     if (localStorage.getItem("inbox")){
-        // console.log("Inbox exists. Loading it now");
-        let tasks = JSON.parse(localStorage.getItem("inbox"));
-        for (let i=0; i<tasks.length; i++){
-            let loadedTask = taskItemFactory(tasks[i].title, tasks[i].desc, tasks[i].date, tasks[i].priority);
-            loadedTask.uuid = tasks[i].uuid; 
-            loadedTask.complete = tasks[i].complete;
+        console.log("Inbox exists. Loading it now");
+        let LS_tasks = JSON.parse(localStorage.getItem("inbox"));
+        for (let i=0; i<LS_tasks.length; i++){
+            let loadedTask = taskItemFactory(LS_tasks[i].title, LS_tasks[i].desc, LS_tasks[i].date, LS_tasks[i].priority);
+            loadedTask.uuid = LS_tasks[i].uuid;  //TODO: THIS IS BROKEN AND DOES NOTHING ? NO! It does!
+            loadedTask.complete = LS_tasks[i].complete;
             inbox.appendTask(loadedTask);
         }
     }
@@ -110,20 +118,19 @@ function LS_load(){
         // Load UUID array and iterate thought it
         const objectsOrder = JSON.parse(localStorage.getItem("projectsOrder"));
         for (let i=0; i<objectsOrder.length; i++){
-            // console.log("Building object with UUID "+objectsOrder[i]);
-
+            
             // for each UUID, load in the project
             let loadedProject = projectFactory(JSON.parse(localStorage.getItem(objectsOrder[i]))[0].title);
-            loadedProject.uuid = objectsOrder[i]; //TODO: THIS IS BROKEN AND DOES NOTHING ?
+            loadedProject.uuid = objectsOrder[i]; //TODO: THIS IS BROKEN AND DOES NOTHING ? NO! It does!
             loadedProject.addSelf();
 
             // Task loading
             let tasks = JSON.parse(localStorage.getItem(objectsOrder[i]));
-            // console.log("start loading tasks for project "+loadedProject.title);
+            console.log("start loading tasks for project "+loadedProject.title);
             for (let j=1; j<tasks.length; j++){
                 // console.log("--building new task: "+tasks[j].title);
                 let loadedTask = taskItemFactory(tasks[j].title, tasks[j].desc, tasks[j].date, tasks[j].priority);
-                loadedTask.uuid = tasks[j].uuid;
+                loadedTask.uuid = tasks[j].uuid; //TODO: THIS IS BROKEN AND DOES NOTHING ? NO! It does!
                 loadedTask.complete = tasks[i].complete;
                 // Append the newly loaded object to the project
                 loadedProject.appendTask(loadedTask);

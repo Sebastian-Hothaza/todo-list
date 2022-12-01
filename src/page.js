@@ -255,7 +255,7 @@ function DOM_ListProjects(){
     for (let i=1; i<projects.length; i++){
 
         const projectContainer = document.createElement('div');
-        //projectContainer.setAttribute('uuid', projects[i].uuid); ADD THIS BACK IN!     <---------
+        projectContainer.setAttribute('uuid', projects[i].uuid);
         projectContainer.classList.add('projectContainer');
         
 
