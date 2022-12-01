@@ -12,15 +12,16 @@
     --font-dark: #323232;
     
     --background-light: #d4d4d4;
-    /* --background-light: white; */
     --background-dark: #323232;
     --card-color: white;
 
     --accent-color: #0062cc;
     --accent-color-alert: #c80000;
+    --accent-color-accept: #00a721;
 
     --accent-color-hover: #004d9f;
     --accent-color-alert-hover: #8e0000;
+    --accent-color-accept-hover: #006e16;
 }
 
 * {
@@ -68,28 +69,72 @@ button{
 /* ---------------------------------        MODALS        -------------------------------------------- */
 
 dialog{
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    padding: 15px;
+    margin : auto auto;
+    padding: 3em;
 
-    /* NOTE: This is sloppy. Find a better way */
-    width: 250px;
-    height: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 3em;
+    border-radius: 10px;
+}
 
-    margin-left: -150px;
-    margin-top: -150px;
-
+dialog #heading{
+    text-align: center;
+    font-size: 28px;
 }
 
 dialog::backdrop{
-    background: rgb(0,0,0,.2);
+    background: rgb(0,0,0,.6);
 }
 
 form{
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+.formPair{
+    display: flex;
+    justify-content: space-between;
+    gap: 2em;
+}
+
+input:focus:not(#modalPriority){
+    outline-color: var(--accent-color);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    transition: .2s;
+}
+
+dialog button{
+    display: flex;
+    justify-content: center;
+    
+    align-self: center;
+    align-items: center;
+    
+    color: var(--font-light);
+    font-size: 20px;
+    height: 30px;
+    width: 200px;
+    border-radius: 10px;
+}
+
+dialog #Confirm{
+    background-color: var(--accent-color-accept);
+}
+
+dialog #Confirm:hover{
+    background-color: var(--accent-color-accept-hover);
+    cursor: pointer;
+}
+
+dialog #cancel{
+    background-color: var(--accent-color-alert);
+}
+
+dialog #cancel:hover{
+    background-color: var(--accent-color-alert-hover);
+    cursor: pointer;
 }
 
 
