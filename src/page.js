@@ -6,26 +6,18 @@ import { format } from 'date-fns';
 let workingProject = projects[0]; 
 
 // -----------------------------   MODAL BUTTONS   -----------------------------
-const modalConfirmBtn = document.querySelector('#modal #Confirm');
-const modalProjectConfirmBtn = document.querySelector('#modalProject #Confirm');
+const modalForm = document.querySelector('#taskForm');
+const modalProjectForm = document.querySelector('#projectForm');
 
-modalConfirmBtn.addEventListener('click', () => {
-    if (!(document.querySelector('#modal #modalTitle').value)) {
-        console.log("EMPTY TASK TITLE, REFUSE TO CREATE OBJ");
-        return;
-    }
+modalForm.addEventListener('submit', () => {
+    
     (modal.getAttribute('modalType') == 'create') ? createTask(workingProject) : editTask();
     DOM_Update();
     resetModal();
 });
 
-modalProjectConfirmBtn.addEventListener('click', () => {
-    if (!(document.querySelector('#modalProject #modalTitle').value)) {
-        console.log("EMPTY PROJECT TITLE, REFUSE TO CREATE OBJ");
-        return;
-    }
-
-
+modalProjectForm.addEventListener('submit', () => {
+    
     (modalProject.getAttribute('modalType') == 'create') ? createProject() : editProject();
     workingProject = projects[projects.length - 1];
     DOM_ListProjects();

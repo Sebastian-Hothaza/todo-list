@@ -71,17 +71,13 @@ button{
 dialog{
     margin : auto auto;
     padding: 3em;
-
-    /* The two below cause modal to be always shown! */
-    /* display: flex; */
-    /* flex-direction: column; */
-    gap: 3em;
     border-radius: 10px;
 }
 
 dialog #heading{
     text-align: center;
     font-size: 28px;
+    margin-bottom: 2em;
 }
 
 dialog::backdrop{
@@ -121,6 +117,7 @@ dialog button{
 }
 
 dialog #Confirm{
+    margin-top: 2em;
     background-color: var(--accent-color-accept);
 }
 
@@ -229,7 +226,7 @@ dialog #cancel:hover{
 }
 
 #createProject{
-    margin-top: 2em;
+    /* margin-top: 7em; */
     justify-content: center;
     font-weight: 100;
 
@@ -296,6 +293,7 @@ dialog #cancel:hover{
 .taskCard{
     display: flex;
     justify-content: space-between;
+    gap: 1em;
     flex-grow: 1;
 
     background-color: var(--card-color);

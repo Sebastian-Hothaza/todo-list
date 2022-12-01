@@ -33,4 +33,4 @@ createProjectBtn.addEventListener('click', () => {
 
 // TODO: Feature idea: when killing some project, lets not go back to working project = the inbox
 
-// TODO: user can hit confirm on invalid input and task is created
+// TODO: Feature idea: project separator when printing

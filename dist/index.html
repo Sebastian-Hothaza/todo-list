@@ -41,16 +41,16 @@
 
     <dialog id="modal" modalType="create">
         <div id="heading">HEADING</div>
-        <form method="dialog">
+        <form id="taskForm" method="dialog">
 
             <div class="formPair">
                 <label for="modalTitle">Title</label>
-                <input type="text" id="modalTitle" name="title" placeholder="Buy Apples">
+                <input type="text" id="modalTitle" name="title" maxlength="30" placeholder="Buy Apples" required>
             </div>
             
             <div class="formPair">
                 <label for="modalDesc">Description</label>
-                <input type="text" id="modalDesc" name="modalDesc" placeholder="12 Pieces, Royal Gala">
+                <input type="text" id="modalDesc" name="modalDesc" maxlength="75" placeholder="12 Pieces, Royal Gala">
             </div>
 
             <div class="formPair">
@@ -64,7 +64,7 @@
             </div>
 
             <button type="submit" id="Confirm">Add Task</button>
-            <button onclick="window.modal.close();"id="cancel">Cancel</button>
+            <button type="button" onclick="window.modal.close();"id="cancel">Cancel</button>
         </form>
     </dialog>
 
@@ -72,19 +72,17 @@
 
     <dialog id="modalProject" modalType="create">
         <div id="heading">HEADING</div>
-        <form method="dialog">
+        <form id="projectForm" method="dialog">
             <div class="formPair">
                 <label for="modalTitle">Title</label>
-                <input type="text" id="modalTitle" name="modalTitle" placeholder="Grocery List">
+                <input type="text" id="modalTitle" name="modalTitle" maxlength="30" placeholder="Grocery List" required>
             </div>
             <button type="submit" id="Confirm">Add Project</button>
-            <button onclick="window.modalProject.close();" id="cancel">Cancel</button>
+            <button type="button" onclick="window.modalProject.close();" id="cancel">Cancel</button>
         </form>
         
     </dialog>
 
-
-    
     
 </body>
 </html>
