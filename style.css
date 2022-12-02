@@ -21,6 +21,7 @@
 * {
     margin: 0px;
     padding: 0px;
+    background-color: var(--background-light);
 }
 
 button{
@@ -31,12 +32,13 @@ button{
     background-color: transparent;
 }
 
+
 .main{
     display: grid;
     grid-template-columns: minmax(350px, auto) 1fr;
     grid-template-rows: auto 1fr auto;
     height: 100vh;
-    background-color: var(--background-light);
+    
 }
 
 /* ---------------------------------   HEADER & FOOTER   -------------------------------------------- */
@@ -200,12 +202,15 @@ dialog #cancel:hover{
     display: flex;
     align-items: center;
     gap: .3em;
-    
 }
 
 .projectBtns>*{
     background-color: var(--background-light);
     color: var(--font-dark);
+}
+
+.selected .projectTitle, .selected .projectBtns{
+    background-color: var(--accent-color);
 }
 
 .selected .projectBtns>*{
