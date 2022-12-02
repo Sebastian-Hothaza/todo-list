@@ -272,35 +272,24 @@ function DOM_ListProjects(){
     const DOM_ProjectList = document.querySelector('#projectList');
     DOM_ProjectList.innerHTML = '';
 
-    // projects.forEach(project => {
+    projects.forEach((project,idx) => {
+        if (idx==0) return; // Go through projects array and list each project. Skip 0 as it is inbox
 
-    // });
-
-    // Go through projects array and list each project. Skip 0 as it is inbox
-    for (let i=1; i<projects.length; i++){
-
+        // ProjectContainer
         const projectContainer = document.createElement('div');
         projectContainer.classList.add('projectContainer');
-        
-
-        // CSS Styling
-        if (workingProject == projects[i]) {
-            resetSelection();
-            projectContainer.classList.add('selected');
-        }
-        
+        if (workingProject == project) projectContainer.classList.add('selected');
         // Create listener for project. This may be an issue due to event bubbling
         projectContainer.addEventListener('click', () => {
-            // CSS Styling
+            workingProject = project;
             resetSelection();
             projectContainer.classList.add('selected');
-            workingProject = projects[i];
             DOM_Update();
         });
 
         // Title
         const projectTitle = document.createElement('div');
-        projectTitle.innerText=projects[i].title;
+        projectTitle.innerText = project.title;
         projectTitle.classList.add('projectTitle');
         projectContainer.append(projectTitle);
 
@@ -309,59 +298,52 @@ function DOM_ListProjects(){
         projectBtns.classList.add('projectBtns');
         
 
-        //EDIT
+        // Button groups -- EDIT
         const editBtn = document.createElement('button');
-
         const editBtnIcon = document.createElement('span');
         editBtnIcon.classList.add("material-icons-outlined");
         editBtnIcon.textContent = 'edit';
         editBtn.appendChild(editBtnIcon);
-
-        projectBtns.appendChild(editBtn);
-
         editBtn.addEventListener('click', (e) => {
             e.stopPropagation(); // We need to stop propagation here!
             modalProject.setAttribute('modalType', 'edit');
-            
-            // STORE html data attribute with unique ID
-            modalProject.setAttribute('uuid', projects[i].uuid);
-
+            modalProject.setAttribute('uuid', project.uuid); // Mark the modal with the uuid of the project
             // Set heading accordingly and pre-load fields with our projects content
             document.querySelector('#modalProject #heading').textContent = 'Edit project';
-            document.querySelector('#modalProject #modalTitle').value = projects[i].title;
-
-
+            document.querySelector('#modalProject #modalTitle').value = project.title;
             modalProject.showModal();
         });
+        projectBtns.appendChild(editBtn); // Done with editBtn, now append it
 
-        //DELETE
+        // Button groups -- DELETE
         const deleteBtn = document.createElement('button');
         const deleteBtnIcon = document.createElement('span');
         deleteBtnIcon.classList.add("material-icons-outlined");
         deleteBtnIcon.textContent = 'delete';
         deleteBtn.appendChild(deleteBtnIcon);
-        projectBtns.appendChild(deleteBtn);
+        
 
         deleteBtn.addEventListener('click', (e) => {
             e.stopPropagation(); // We need to stop propagation here!
+            // If we are the workingProject and we are deleting ourselves, set it to the inbox
+            if (project == workingProject) workingProject = projects[0];
 
-            // If we are the workingProject, set it to the inbox
-            if (workingProject == projects[i]) workingProject = projects[0];
+            removeProject(project);
 
-            removeProject(projects[i]);
             resetSelection();
             allTasksBtn.classList.add('selected');
             
             DOM_ListProjects();
             DOM_Update();
         });
+        projectBtns.appendChild(deleteBtn); // Done with deleteBtn, now append it
 
         // Done building buttons panel
         projectContainer.appendChild(projectBtns);
 
         // DONE building elements in the project container, now append it
         DOM_ProjectList.appendChild(projectContainer);
-    }
+    });
 }
 
 // Resets all fields in the modal
