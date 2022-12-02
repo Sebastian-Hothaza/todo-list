@@ -112,7 +112,6 @@ function LS_load(){
     for (let i=0; i<objectsOrder.length; i++){
         // for each UUID, load in the project
         let loadedProject = projectFactory(JSON.parse(localStorage.getItem(objectsOrder[i]))[0].title); 
-        // TODO: Why not load tasks here? Can we do that directly instead of the for loop below? (like how we assign the uuid)
         loadedProject.uuid = objectsOrder[i]; 
         projects.push(loadedProject);
 

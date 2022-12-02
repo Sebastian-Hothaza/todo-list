@@ -134,7 +134,7 @@ function DOM_printProjectHeader(project){
 function DOM_ListTasks(project, range){
     const taskList = document.querySelector('#taskList');
     let headerPrinted = false;
-    let tasks = project.tasks; //TODO: Simplify in here, maybe use forEach
+    
 
     // Check if project is a user project (thus we need to print the heading)
     let isUserProject = !(document.querySelector('#allTasks').classList.contains('selected') || 
@@ -144,7 +144,6 @@ function DOM_ListTasks(project, range){
 
     // Loop thru task array and list each valid task
     project.tasks.forEach(task => {
-
         // Convert due date into a date object so we can work with it
         var parts = task.date.split('-');
         var dueDate = new Date(parts[0], parts[1] - 1, parts[2]); 
@@ -155,7 +154,7 @@ function DOM_ListTasks(project, range){
         if (range == 1 && (dueDate.getDate() != new Date().getDate())) return;
         
         // Exclude tasks which fail criteria
-        if (!(range == -1 || (days_diff <= range && days_diff>-1))) return; 
+        if (range != -1 && (isNaN(days_diff) || days_diff > range || days_diff<=-1)) return; 
 
         // Print project header
         if (!headerPrinted && project != projects[0] && !isUserProject) {
@@ -163,108 +162,96 @@ function DOM_ListTasks(project, range){
             headerPrinted = true;
         }
 
-        // Create the task container
+        // TaskContainer
         const taskContainer = document.createElement('div');
         taskContainer.classList.add('taskContainer');
-       
         task.complete? taskContainer.classList.add('taskComplete') : taskContainer.classList.remove('taskComplete')
         task.priority? taskContainer.classList.add('taskPriority') : taskContainer.classList.remove('taskPriority')
 
-        // COMPLETE
+        // TaskContainer -- COMPLETE
         const toggleCompleteBtn = document.createElement('button');
         toggleCompleteBtn.classList.add('taskCompleteBtn');
-        
         const completeIcon = document.createElement('span');
         completeIcon.classList.add("material-icons-outlined");
         task.complete? completeIcon.textContent = 'check_circle' : completeIcon.textContent = 'circle'
         toggleCompleteBtn.appendChild(completeIcon);
-
-        taskContainer.appendChild(toggleCompleteBtn);
         toggleCompleteBtn.addEventListener('click', () => {
             toggleCompleteTask(task);
             DOM_Update();
         });
+        taskContainer.appendChild(toggleCompleteBtn); // Done with toggleCompleteBtn, now append it
         
-        // CARD
+        // TaskContainer -- CARD
         const taskCard = document.createElement('div');
         taskCard.classList.add('taskCard');
 
-        // LEFT: title and description
-        const cardLeft = document.createElement('div');
-        cardLeft.classList.add('cardLeft');
+            // TaskContainer -- CARD -- LEFT
+            const cardLeft = document.createElement('div');
+            cardLeft.classList.add('cardLeft');
 
-        const taskTitle = document.createElement('div');
-        taskTitle.classList.add('taskTitle');
-        taskTitle.textContent = task.title;
-        cardLeft.appendChild(taskTitle);
+                // TaskContainer -- CARD -- LEFT -- TITLE
+                const taskTitle = document.createElement('div');
+                taskTitle.classList.add('taskTitle');
+                taskTitle.textContent = task.title;
+                cardLeft.appendChild(taskTitle);
 
-        // Only add Desc to DOM if it exists
-        if (task.desc){
-            const taskDesc = document.createElement('div');
-            taskDesc.classList.add('taskDesc');
-            taskDesc.textContent = task.desc;
-            cardLeft.appendChild(taskDesc);
-        }
+                // TaskContainer -- CARD -- LEFT -- DESC
+                if (task.desc){
+                    const taskDesc = document.createElement('div');
+                    taskDesc.classList.add('taskDesc');
+                    taskDesc.textContent = task.desc;
+                    cardLeft.appendChild(taskDesc);
+                }
 
-        taskCard.appendChild(cardLeft);
-
-
-        // RIGHT: date, edit and delete buttons
-        const cardRight = document.createElement('div');
-        cardRight.classList.add('cardRight');
-    
-        const taskDate = document.createElement('div');
-        taskDate.classList.add('taskDate');
-        taskDate.textContent = task.date;
-        cardRight.appendChild(taskDate);
-
-        //EDIT
-        const editBtn = document.createElement('button');
-        const editBtnIcon = document.createElement('span');
-        editBtnIcon.classList.add("material-icons-outlined");
-        editBtnIcon.textContent = 'edit';
-        editBtn.appendChild(editBtnIcon);
-        cardRight.appendChild(editBtn);
-        editBtn.addEventListener('click', () => {
-            modal.setAttribute('modalType', 'edit');
-            
-            // STORE html data attribute with unique ID
-            modal.setAttribute('uuid', task.uuid);
-
-            // Set heading accordingly and pre-load fields with our tasks content
-            document.querySelector('#modal #heading').textContent = 'Edit task';
-            document.querySelector('#modal #modalTitle').value = task.title;
-            document.querySelector('#modal #modalDate').value = task.date;
-            document.querySelector('#modal #modalDesc').value = task.desc;
-            document.querySelector('#modal #modalPriority').checked = task.priority;
+                taskCard.appendChild(cardLeft); // Done with cardLeft, now append it
 
 
-            modal.showModal();
-        });  
-
-
-        //DELETE
-        const deleteBtn = document.createElement('button');
-        const deleteBtnIcon = document.createElement('span');
-        deleteBtnIcon.classList.add("material-icons-outlined");
-        deleteBtnIcon.textContent = 'delete';
-        deleteBtn.appendChild(deleteBtnIcon);
-        cardRight.appendChild(deleteBtn);
-        deleteBtn.addEventListener('click', () => {
-            removeTask(task);
-            DOM_Update();
-        });
-        taskCard.appendChild(cardRight);
-
+            // TaskContainer -- CARD -- RIGHT
+            const cardRight = document.createElement('div');
+            cardRight.classList.add('cardRight');
         
-        
-        
-        // Done building taskCard, append it to the taskContainer
-        taskContainer.appendChild(taskCard);
+                // TaskContainer -- CARD -- RIGHT -- DATE
+                const taskDate = document.createElement('div');
+                taskDate.classList.add('taskDate');
+                taskDate.textContent = task.date;
+                cardRight.appendChild(taskDate);
 
+                // TaskContainer -- CARD -- RIGHT -- EDIT
+                const editBtn = document.createElement('button');
+                const editBtnIcon = document.createElement('span');
+                editBtnIcon.classList.add("material-icons-outlined");
+                editBtnIcon.textContent = 'edit';
+                editBtn.appendChild(editBtnIcon);
+                editBtn.addEventListener('click', () => {
+                    modal.setAttribute('modalType', 'edit');
+                    modal.setAttribute('uuid', task.uuid); // Mark the modal with the uuid of the project
+                    // Set heading accordingly and pre-load fields with our tasks content
+                    document.querySelector('#modal #heading').textContent = 'Edit task';
+                    document.querySelector('#modal #modalTitle').value = task.title;
+                    document.querySelector('#modal #modalDate').value = task.date;
+                    document.querySelector('#modal #modalDesc').value = task.desc;
+                    document.querySelector('#modal #modalPriority').checked = task.priority;
+                    modal.showModal();
+                });  
+                cardRight.appendChild(editBtn); // Done with editBtn, now append it
 
-        // DONE building task container, now append it
-        taskList.appendChild(taskContainer);
+                // TaskContainer -- CARD -- RIGHT -- DELETE
+                const deleteBtn = document.createElement('button');
+                const deleteBtnIcon = document.createElement('span');
+                deleteBtnIcon.classList.add("material-icons-outlined");
+                deleteBtnIcon.textContent = 'delete';
+                deleteBtn.appendChild(deleteBtnIcon);
+                deleteBtn.addEventListener('click', () => {
+                    removeTask(task);
+                    DOM_Update();
+                });
+                cardRight.appendChild(deleteBtn); // Done with deleteBtn, now append it
+
+                taskCard.appendChild(cardRight); // Done with cardRight, now append it
+        
+        taskContainer.appendChild(taskCard); // Done building taskCard, append it to the taskContainer
+
+        taskList.appendChild(taskContainer); // DONE building task container, now append it
 
     });
 }
@@ -284,7 +271,6 @@ function DOM_ListProjects(){
             resetSelection();
             projectContainer.classList.add('selected');
         }
-        // Create listener for project. This may be an issue due to event bubbling
         projectContainer.addEventListener('click', () => {
             workingProject = project;
             resetSelection();
@@ -326,8 +312,6 @@ function DOM_ListProjects(){
         deleteBtnIcon.classList.add("material-icons-outlined");
         deleteBtnIcon.textContent = 'delete';
         deleteBtn.appendChild(deleteBtnIcon);
-        
-
         deleteBtn.addEventListener('click', (e) => {
             e.stopPropagation(); // We need to stop propagation here!
             // If we are the workingProject and we are deleting ourselves, set it to the inbox
@@ -343,11 +327,9 @@ function DOM_ListProjects(){
         });
         projectBtns.appendChild(deleteBtn); // Done with deleteBtn, now append it
 
-        // Done building buttons panel
-        projectContainer.appendChild(projectBtns);
+        projectContainer.appendChild(projectBtns); // Done building buttons panel
 
-        // DONE building elements in the project container, now append it
-        DOM_ProjectList.appendChild(projectContainer);
+        DOM_ProjectList.appendChild(projectContainer); // DONE building elements in the project container, now append it
     });
 }
 
