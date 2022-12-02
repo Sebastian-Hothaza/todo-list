@@ -50,8 +50,8 @@ function editTask(){
 // Removes a task from project
 function removeTask(task){
     let project = getProject(task); // We need this otherwise LS won't find project since task doesn't exist in that project after deletion
-    project.removeTask(task.uuid);  // Removes the task from the project
-    LS_removeTask(project, task);   // Remove task from localStorage. 
+    project.removeTask(task); // Removes the task from the project
+    LS_removeTask(project, task); // Remove task from localStorage. 
 }
 
 // Toggles a task as complete
