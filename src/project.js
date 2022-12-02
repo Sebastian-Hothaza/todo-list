@@ -1,10 +1,9 @@
 export { createProject, editProject, removeProject, projectFactory, projects };
 import { LS_addProject, LS_editProject, LS_removeProject } from "./localStorage"
 
-let projects = [];
+let projects = []; // Tracks all project objects
 
 const projectFactory = (title) => {
-    // NOTE: These defaults will need to be loaded in when recall from LocalStorage
     let uuid = self.crypto.randomUUID();
     let tasks = [];
 

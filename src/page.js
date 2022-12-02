@@ -2,7 +2,7 @@ export { DOM_Update, DOM_ListProjects, HOTKEY_selectAllTasks, HOTKEY_selectTdyTa
 import { createTask, editTask, removeTask, toggleCompleteTask } from "./task";
 import { createProject, editProject, removeProject, projects } from "./project";
 
-let workingProject = projects[0]; 
+let workingProject = projects[0]; // Always start with workingProject as the inbox
 
 // -----------------------------   MODAL BUTTONS   -----------------------------
 const modalForm = document.querySelector('#taskForm');
@@ -33,7 +33,6 @@ const allTasksBtn = document.querySelector('#allTasks');
 const todayBtn = document.querySelector('#today');
 const thisWeekBtn = document.querySelector('#thisWeek');
 const clearCompleteBtn = document.querySelector('#clearComplete');
-const resetStorageBtn = document.querySelector('#resetStorage');
 
 allTasksBtn.addEventListener('click', () => {
     // CSS styling
@@ -97,16 +96,11 @@ clearCompleteBtn.addEventListener('click', () => {
     DOM_Update();
 });
 
-resetStorageBtn.addEventListener('click', () => {
-    localStorage.clear();
-    location.reload();
-});
 // -----------------------------------------------------------------------------
 
 // Indirectly updates DOM by calling DOM_ListTasks dependent on currently selected sidebar heading
 function DOM_Update(){
     document.querySelector('#taskList').innerHTML = ''; // Clearing can only happen here! If we clear in the DOM_ListTasks method, we lose ability to append
-
     if (document.querySelector('#allTasks').classList.contains('selected')){
         projects.forEach(proj => DOM_ListTasks(proj,-1));
     } else if (document.querySelector('#today').classList.contains('selected')) {
@@ -134,10 +128,9 @@ function DOM_printProjectHeader(project){
 function DOM_ListTasks(project, range){
     const taskList = document.querySelector('#taskList');
     let headerPrinted = false;
-    
 
-    // Check if project is a user project (thus we need to print the heading)
-    let isUserProject = !(document.querySelector('#allTasks').classList.contains('selected') || 
+    // Check if we are in the user project tab (thus we skip printing header)
+    let isUserProjectTab = !(document.querySelector('#allTasks').classList.contains('selected') || 
                         document.querySelector('#today').classList.contains('selected') || 
                         document.querySelector('#thisWeek').classList.contains('selected'));
 
@@ -157,7 +150,7 @@ function DOM_ListTasks(project, range){
         if (range != -1 && (isNaN(days_diff) || days_diff > range || days_diff<=-1)) return; 
 
         // Print project header
-        if (!headerPrinted && project != projects[0] && !isUserProject) {
+        if (!headerPrinted && project != projects[0] && !isUserProjectTab) {
             DOM_printProjectHeader(project);
             headerPrinted = true;
         }
@@ -202,7 +195,6 @@ function DOM_ListTasks(project, range){
                     taskDesc.textContent = task.desc;
                     cardLeft.appendChild(taskDesc);
                 }
-
                 taskCard.appendChild(cardLeft); // Done with cardLeft, now append it
 
 
@@ -348,7 +340,6 @@ function resetModalProject(){
 
 // Clears "selected" tag on all elements
 function resetSelection(){
-    // Clear top 3
     document.querySelector('#allTasks').classList.remove('selected');
     document.querySelector('#today').classList.remove('selected');
     document.querySelector('#thisWeek').classList.remove('selected');

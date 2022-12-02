@@ -1,7 +1,7 @@
 import { DOM_Update, DOM_ListProjects, HOTKEY_selectAllTasks, HOTKEY_selectTdyTasks, HOTKEY_selectWeekTasks } from "./page";
 import { LS_load } from "./localStorage"
-import { loadSampleData } from "./sampleTasks";
-export { loadSampleData } // Whatever we export here will be accessible in console using global.XXX
+import { loadSampleData, clear } from "./sampleTasks";
+export { loadSampleData, clear } // Whatever we export here will be accessible in console using global.XXX
 
 const modal = document.querySelector('#modal');
 const modalProject = document.querySelector('#modalProject');
@@ -44,8 +44,6 @@ document.addEventListener('keydown', (e) => {
             HOTKEY_selectWeekTasks();
             break;        
     }
-    
-    
 }, false);
 
 // CreateTask and createProject open the respective modal to gather info

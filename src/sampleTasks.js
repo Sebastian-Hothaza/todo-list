@@ -1,4 +1,4 @@
-export { loadSampleData }
+export { loadSampleData, clear }
 import {taskItemFactory} from "./task"
 import {projectFactory, projects } from "./project"
 import {LS_addTask, LS_addProject} from "./localStorage"
@@ -87,4 +87,10 @@ function createTask(project, title, desc, date, priority){
     const newProj = taskItemFactory(title, desc, date, priority);
     project.appendTask(newProj);  
     LS_addTask(project, newProj);
+}
+
+// Clears the localStorage and refreshes the site
+function clear(){
+    localStorage.clear();
+    location.reload();
 }

@@ -37,7 +37,6 @@ function LS_editTask(project, task){
     // go through tasks in the project until find matching ID, then update that task
     for ( ; idx<fetchedTasks.length; idx++){
         if (fetchedTasks[idx].uuid == task.uuid){
-
             // Update the task here!
             fetchedTasks[idx].title = task.title;
             fetchedTasks[idx].desc = task.desc;
@@ -105,24 +104,25 @@ function LS_load(){
     // If there are no user projects to load, we are done
     if (!(JSON.parse(localStorage.getItem("projectsOrder")))) return;
 
-    // Load user projects in order of which they were originally created (specified by projectsOrder)
+    // Load user projects in order of which they were originally created (as specified by projectsOrder)
     const objectsOrder = JSON.parse(localStorage.getItem("projectsOrder"));
-
+    objectsOrder.forEach(uuid => {
     // Go through the UUID's and load in the corresponding project and its tasks
-    for (let i=0; i<objectsOrder.length; i++){
+    
         // for each UUID, load in the project
-        let loadedProject = projectFactory(JSON.parse(localStorage.getItem(objectsOrder[i]))[0].title); 
-        loadedProject.uuid = objectsOrder[i]; 
+        let loadedProject = projectFactory(JSON.parse(localStorage.getItem(uuid))[0].title); 
+        loadedProject.uuid = uuid; 
         projects.push(loadedProject);
 
         // Task loading
-        let LS_tasks = JSON.parse(localStorage.getItem(objectsOrder[i]));
+        let LS_tasks = JSON.parse(localStorage.getItem(uuid));
         
-        for (let j=1; j<LS_tasks.length; j++){
-            let loadedTask = taskItemFactory(LS_tasks[j].title, LS_tasks[j].desc, LS_tasks[j].date, LS_tasks[j].priority);
-            loadedTask.uuid = LS_tasks[j].uuid; 
-            loadedTask.complete = LS_tasks[j].complete;
+        LS_tasks.forEach((task,idx) => {
+            if (idx==0) return; // Skip first element since that's just the project itself
+            let loadedTask = taskItemFactory(task.title, task.desc, task.date, task.priority);
+            loadedTask.uuid = task.uuid; 
+            loadedTask.complete = task.complete;
             loadedProject.appendTask(loadedTask);
-        }
-    }
+        });
+    });
 }

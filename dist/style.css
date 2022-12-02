@@ -246,18 +246,10 @@ dialog #cancel:hover{
     transition: transform .3s;
 }
 
-#resetStorage{
-    justify-content: center;
-    color: var(--font-light);
-    background-color: var(--accent-color-alert);
-    font-size: 18px;
-    border-radius: 15px;
-    padding: .2em .5em;
-    transition: transform .3s;
-}
 
-#clearComplete:hover, #resetStorage:hover{
-    transform: scale(1.05);
+
+#clearComplete:hover{
+    transform: scale(1.03);
 }
 
 /* ---------------------------------        TASKS        -------------------------------------------- */
@@ -269,7 +261,7 @@ dialog #cancel:hover{
 #taskList{
     display: flex;
     flex-direction: column;
-    gap: 1.3em;
+    gap: 1em;
 }
 
 .taskContainer{
@@ -296,10 +288,10 @@ dialog #cancel:hover{
     flex-grow: 1;
 
     background-color: var(--card-color);
-    padding: .5em 1em;
+    padding: .2em .5em;
     border-radius: 10px;
-    font-size: 20px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    font-size: 18px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
 }
 
 .cardLeft, .cardRight{
@@ -331,7 +323,7 @@ dialog #cancel:hover{
     align-items: center;
     color: var(--font-medium);
     font-style: italic;
-    font-size: 16px;
+    font-size: 14px;
 
     margin-left: 1em;
     padding-left: 1em;
@@ -362,12 +354,12 @@ dialog #cancel:hover{
 
 .cardRight :nth-child(2)>*:hover{
     background-color: var(--accent-color-hover);
-    transform: scale(1.15);
+    transform: scale(1.1);
     cursor: pointer;
 }
 .cardRight :nth-child(3)>*:hover{
     background-color: var(--accent-color-alert-hover);
-    transform: scale(1.15);
+    transform: scale(1.1);
     cursor: pointer;
 }
 
