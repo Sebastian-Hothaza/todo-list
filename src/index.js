@@ -1,21 +1,31 @@
 import { DOM_Update, DOM_ListProjects, HOTKEY_selectAllTasks, HOTKEY_selectTdyTasks, HOTKEY_selectWeekTasks } from "./page";
 import { LS_load } from "./localStorage"
+import { loadSampleData } from "./sampleTasks";
 
 const createTaskBtn = document.querySelector('#createTask');
 const createProjectBtn = document.querySelector('#createProject');
 const modal = document.querySelector('#modal');
 const modalProject = document.querySelector('#modalProject');
 
-// Check local storage
-if (localStorage.length){ 
-    LS_load();
-    DOM_ListProjects();
-    DOM_Update();
+// TODO: move this out to some console accessible fn
+const loadSample = false;
+if (loadSample){
+    loadSampleData();
 } else {
-    // Create blank inbox object (relied on for adding tasks later)
-    let arr = [];
-    localStorage.setItem("inbox", JSON.stringify(arr));
+    // Check local storage
+    if (localStorage.length){ 
+        LS_load();
+        DOM_ListProjects();
+        DOM_Update();
+    } else {
+        // Create blank inbox object (relied on for adding tasks later)
+        let arr = [];
+        localStorage.setItem("inbox", JSON.stringify(arr));
+    }
 }
+
+
+
 
 // Create task
 createTaskBtn.addEventListener('click', () => {
@@ -65,3 +75,4 @@ UUID is required since once a task is stored in LS, that UUID persists with it.
 When we create new task from LS_load, if we don't re-use that UUID, we get a random one to which the delete btn associates with.
 Thus when we click delete, the UUID doesn't match and we cannot update the LS to remove it
 */
+
