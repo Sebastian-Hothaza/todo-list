@@ -6,8 +6,9 @@ let projects = [];
 const projectFactory = (title) => {
     let uuid = self.crypto.randomUUID();
     let tasks = [];
+    // console.log("CTOR run for project "+title);
+    // console.log("this "+this);
 
-    //TODO: can we do this as part of CTOR for tasks?
     function appendTask(task){ tasks.push(task); }
 
     // Returns single task object matching id. Needs to work on uuid basis due to modal uuid fetching
@@ -16,7 +17,6 @@ const projectFactory = (title) => {
     // Modifies tasks array to remove a task
     function removeTask(task){ tasks = tasks.filter(tsk => task != tsk);}
 
-    
     //TODO: can we do this as part of CTOR for project?
     function addSelf(){ 
         projects.push(this);

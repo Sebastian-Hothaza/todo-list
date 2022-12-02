@@ -66,8 +66,7 @@ function LS_removeTask(project, task){
 function LS_addProject(project){
     let arr = [project];
     localStorage.setItem(project.uuid, JSON.stringify(arr));
-    // Append the newly created project UUID to tracker to preserve order when restore from LS
-    LS_addProjectUUID(project.uuid);
+    LS_addProjectUUID(project.uuid); // Append the newly created project UUID to tracker to preserve order when restore from LS
 }
 
 // Updates the LS for a project with updated info
