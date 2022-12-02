@@ -127,7 +127,7 @@ function DOM_printProjectHeader(project){
     taskList.appendChild(projSep);
 }
 
-// Given an array of tasks, updates DOM with the valid tasks
+// Given a project, updates DOM with the valid tasks
 // range:-1 -> list all tasks
 // range: 1 -> list all tasks due today
 // range: n -> list all tasks occuring over the next n days 
@@ -136,24 +136,26 @@ function DOM_ListTasks(project, range){
     let headerPrinted = false;
     let tasks = project.tasks; //TODO: Simplify in here, maybe use forEach
 
+    // Check if project is a user project (thus we need to print the heading)
     let isUserProject = !(document.querySelector('#allTasks').classList.contains('selected') || 
                         document.querySelector('#today').classList.contains('selected') || 
                         document.querySelector('#thisWeek').classList.contains('selected'));
-    
+
+
     // Loop thru task array and list each valid task
-    for (let i=0; i<tasks.length; i++){
-        
+    project.tasks.forEach(task => {
+
         // Convert due date into a date object so we can work with it
-        var parts = tasks[i].date.split('-');
+        var parts = task.date.split('-');
         var dueDate = new Date(parts[0], parts[1] - 1, parts[2]); 
         const time_diff = dueDate.getTime()-new Date().getTime();
         const days_diff = time_diff / (1000 * 3600 * 24);
 
         // If we want items due today, we have to cut any that would extend to tmw (24H bug fix)
-        if (range == 1 && (dueDate.getDate() != new Date().getDate())) continue;
+        if (range == 1 && (dueDate.getDate() != new Date().getDate())) return;
         
         // Exclude tasks which fail criteria
-        if (!(range == -1 || (days_diff <= range && days_diff>-1))) continue; 
+        if (!(range == -1 || (days_diff <= range && days_diff>-1))) return; 
 
         // Print project header
         if (!headerPrinted && project != projects[0] && !isUserProject) {
@@ -165,8 +167,8 @@ function DOM_ListTasks(project, range){
         const taskContainer = document.createElement('div');
         taskContainer.classList.add('taskContainer');
        
-        tasks[i].complete? taskContainer.classList.add('taskComplete') : taskContainer.classList.remove('taskComplete')
-        tasks[i].priority? taskContainer.classList.add('taskPriority') : taskContainer.classList.remove('taskPriority')
+        task.complete? taskContainer.classList.add('taskComplete') : taskContainer.classList.remove('taskComplete')
+        task.priority? taskContainer.classList.add('taskPriority') : taskContainer.classList.remove('taskPriority')
 
         // COMPLETE
         const toggleCompleteBtn = document.createElement('button');
@@ -174,12 +176,12 @@ function DOM_ListTasks(project, range){
         
         const completeIcon = document.createElement('span');
         completeIcon.classList.add("material-icons-outlined");
-        tasks[i].complete? completeIcon.textContent = 'check_circle' : completeIcon.textContent = 'circle'
+        task.complete? completeIcon.textContent = 'check_circle' : completeIcon.textContent = 'circle'
         toggleCompleteBtn.appendChild(completeIcon);
 
         taskContainer.appendChild(toggleCompleteBtn);
         toggleCompleteBtn.addEventListener('click', () => {
-            toggleCompleteTask(tasks[i]);
+            toggleCompleteTask(task);
             DOM_Update();
         });
         
@@ -193,14 +195,14 @@ function DOM_ListTasks(project, range){
 
         const taskTitle = document.createElement('div');
         taskTitle.classList.add('taskTitle');
-        taskTitle.textContent = tasks[i].title;
+        taskTitle.textContent = task.title;
         cardLeft.appendChild(taskTitle);
 
         // Only add Desc to DOM if it exists
-        if (tasks[i].desc){
+        if (task.desc){
             const taskDesc = document.createElement('div');
             taskDesc.classList.add('taskDesc');
-            taskDesc.textContent = tasks[i].desc;
+            taskDesc.textContent = task.desc;
             cardLeft.appendChild(taskDesc);
         }
 
@@ -213,7 +215,7 @@ function DOM_ListTasks(project, range){
     
         const taskDate = document.createElement('div');
         taskDate.classList.add('taskDate');
-        taskDate.textContent = tasks[i].date;
+        taskDate.textContent = task.date;
         cardRight.appendChild(taskDate);
 
         //EDIT
@@ -227,14 +229,14 @@ function DOM_ListTasks(project, range){
             modal.setAttribute('modalType', 'edit');
             
             // STORE html data attribute with unique ID
-            modal.setAttribute('uuid', tasks[i].uuid);
+            modal.setAttribute('uuid', task.uuid);
 
             // Set heading accordingly and pre-load fields with our tasks content
             document.querySelector('#modal #heading').textContent = 'Edit task';
-            document.querySelector('#modal #modalTitle').value = tasks[i].title;
-            document.querySelector('#modal #modalDate').value = tasks[i].date;
-            document.querySelector('#modal #modalDesc').value = tasks[i].desc;
-            document.querySelector('#modal #modalPriority').checked = tasks[i].priority;
+            document.querySelector('#modal #modalTitle').value = task.title;
+            document.querySelector('#modal #modalDate').value = task.date;
+            document.querySelector('#modal #modalDesc').value = task.desc;
+            document.querySelector('#modal #modalPriority').checked = task.priority;
 
 
             modal.showModal();
@@ -249,7 +251,7 @@ function DOM_ListTasks(project, range){
         deleteBtn.appendChild(deleteBtnIcon);
         cardRight.appendChild(deleteBtn);
         deleteBtn.addEventListener('click', () => {
-            removeTask(tasks[i]);
+            removeTask(task);
             DOM_Update();
         });
         taskCard.appendChild(cardRight);
@@ -264,7 +266,7 @@ function DOM_ListTasks(project, range){
         // DONE building task container, now append it
         taskList.appendChild(taskContainer);
 
-    }
+    });
 }
 
 // Update sidebar DOM based on projects[]
@@ -278,7 +280,10 @@ function DOM_ListProjects(){
         // ProjectContainer
         const projectContainer = document.createElement('div');
         projectContainer.classList.add('projectContainer');
-        if (workingProject == project) projectContainer.classList.add('selected');
+        if (workingProject == project) {
+            resetSelection();
+            projectContainer.classList.add('selected');
+        }
         // Create listener for project. This may be an issue due to event bubbling
         projectContainer.addEventListener('click', () => {
             workingProject = project;
