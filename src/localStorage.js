@@ -1,12 +1,12 @@
 export { LS_addTask, LS_editTask, LS_removeTask, LS_addProject, LS_editProject, LS_removeProject, LS_load }
-import { inbox, projectFactory } from "./project"
+import { projects, projectFactory } from "./project"
 import { taskItemFactory } from "./task";
 
 
 // Adds task object to existing project 
 function LS_addTask(project, task){
     let LS_key;
-    (project == inbox)? LS_key=project.title : LS_key=project.uuid
+    (project == projects[0])? LS_key=project.title : LS_key=project.uuid
 
     let fetchedTasks = JSON.parse(localStorage.getItem(LS_key)); 
     fetchedTasks.push(task);
@@ -17,7 +17,7 @@ function LS_addTask(project, task){
 function LS_editTask(project, task){
     let idx;
     let LS_key;
-    if (project == inbox){
+    if (project == projects[0]){
         idx = 0;
         LS_key = "inbox";
     }else{
@@ -48,7 +48,7 @@ function LS_editTask(project, task){
 // Updates the LS by removing the task
 function LS_removeTask(project, task){
     let LS_key;
-    (project == inbox)? LS_key="inbox" : LS_key=project.uuid
+    (project == projects[0])? LS_key="inbox" : LS_key=project.uuid
     
     let fetchedTasks = JSON.parse(localStorage.getItem(LS_key));
     // Filter: keep items that don't match the UUID of the task we want to remove
@@ -93,7 +93,7 @@ function LS_load(){
         let loadedTask = taskItemFactory(LS_inboxTasks[i].title, LS_inboxTasks[i].desc, LS_inboxTasks[i].date, LS_inboxTasks[i].priority);
         loadedTask.uuid = LS_inboxTasks[i].uuid; 
         loadedTask.complete = LS_inboxTasks[i].complete;
-        inbox.appendTask(loadedTask);
+        projects[0].appendTask(loadedTask);
     }
      
     // If there are no user projects to load, we are done

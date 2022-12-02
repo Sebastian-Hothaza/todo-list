@@ -1,4 +1,4 @@
-export { createProject, editProject, removeProject, projectFactory, projects, inbox };
+export { createProject, editProject, removeProject, projectFactory, projects };
 import { LS_addProject, LS_editProject, LS_removeProject } from "./localStorage"
 
 let projects = [];

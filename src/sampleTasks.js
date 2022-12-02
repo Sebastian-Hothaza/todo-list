@@ -1,6 +1,6 @@
 export { loadSampleData }
 import {taskItemFactory} from "./task"
-import {projectFactory, inbox} from "./project"
+import {projectFactory, projects } from "./project"
 import {LS_addTask, LS_addProject} from "./localStorage"
 
 
@@ -47,9 +47,9 @@ function loadSampleData(){
 
     // Build tasks
     //INBOX
-    createTask(inbox, "Feed Garfield", "No more than 2 cups of kibbles!", tmw, false);
-    createTask(inbox, "Renew Amazon Prime Subscription", "Double check if there is a discount for 2-yr renewal", thisWeek, true);
-    createTask(inbox, "Water the Lawn", "", tdy, false);
+    createTask(projects[0], "Feed Garfield", "No more than 2 cups of kibbles!", tmw, false);
+    createTask(projects[0], "Renew Amazon Prime Subscription", "Double check if there is a discount for 2-yr renewal", thisWeek, true);
+    createTask(projects[0], "Water the Lawn", "", tdy, false);
 
     // SHOPPING
     createTask(shopping, "Apples", "", '', false);
