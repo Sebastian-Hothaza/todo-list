@@ -48,7 +48,6 @@ document.addEventListener('keydown', (e) => {
     
 }, false);
 
-
 // CreateTask and createProject open the respective modal to gather info
 function createTask_prompt(){
     modal.setAttribute('modalType', 'create');
