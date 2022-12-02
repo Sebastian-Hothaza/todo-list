@@ -1,7 +1,6 @@
 export { DOM_Update, DOM_ListProjects, HOTKEY_selectAllTasks, HOTKEY_selectTdyTasks, HOTKEY_selectWeekTasks }
 import { createTask, editTask, removeTask, toggleCompleteTask } from "./task";
 import { createProject, editProject, removeProject, projects } from "./project";
-import { format } from 'date-fns';
 
 let workingProject = projects[0]; 
 
@@ -272,6 +271,10 @@ function DOM_ListTasks(project, range){
 function DOM_ListProjects(){
     const DOM_ProjectList = document.querySelector('#projectList');
     DOM_ProjectList.innerHTML = '';
+
+    // projects.forEach(project => {
+
+    // });
 
     // Go through projects array and list each project. Skip 0 as it is inbox
     for (let i=1; i<projects.length; i++){

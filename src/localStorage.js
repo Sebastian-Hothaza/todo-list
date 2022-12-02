@@ -111,9 +111,10 @@ function LS_load(){
     // Go through the UUID's and load in the corresponding project and its tasks
     for (let i=0; i<objectsOrder.length; i++){
         // for each UUID, load in the project
-        let loadedProject = projectFactory(JSON.parse(localStorage.getItem(objectsOrder[i]))[0].title); //why 0 here?
+        let loadedProject = projectFactory(JSON.parse(localStorage.getItem(objectsOrder[i]))[0].title); 
+        // TODO: Why not load tasks here? Can we do that directly instead of the for loop below? (like how we assign the uuid)
         loadedProject.uuid = objectsOrder[i]; 
-        loadedProject.addSelf();
+        projects.push(loadedProject);
 
         // Task loading
         let LS_tasks = JSON.parse(localStorage.getItem(objectsOrder[i]));

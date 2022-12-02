@@ -25,23 +25,23 @@ function loadSampleData(){
     
     // Build Projects
     const shopping = projectFactory("Shopping List");
-    shopping.addSelf();
+    projects.push(shopping);
     LS_addProject(shopping);
 
     const work = projectFactory("Workplace");
-    work.addSelf();
+    projects.push(work);
     LS_addProject(work);  
 
     const vacation = projectFactory("Cuba Vacation Planning");
-    vacation.addSelf();
+    projects.push(vacation);
     LS_addProject(vacation);
 
     const house = projectFactory("House Renovations");
-    house.addSelf();
+    projects.push(house);
     LS_addProject(house);  
 
     const automotive = projectFactory("Car Work To-Do");
-    automotive.addSelf();
+    projects.push(automotive);
     LS_addProject(automotive);  
 
 

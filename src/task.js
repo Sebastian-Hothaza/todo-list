@@ -13,7 +13,6 @@ const taskItemFactory = (title, desc, date, priority) => {
         get desc(){return desc;}, set desc(newDesc){desc=newDesc},
         get date(){return date;}, set date(newDate){date=newDate},
         get priority(){return priority;}, set priority(newPriority){priority=newPriority},
-
         get complete(){return complete;}, set complete(newComplete){complete=newComplete},
         get uuid(){return uuid;}, set uuid(newUuid){uuid=newUuid}
     };
@@ -26,7 +25,6 @@ function createTask(project){
                                     document.querySelector('#modal #modalDesc').value,
                                     document.querySelector('#modal #modalDate').value,
                                     document.querySelector('#modal #modalPriority').checked);
-
     
     project.appendTask(newTask); // Append the newly created object to the project
     LS_addTask(project, newTask); // Append the newly created task to localStorage. 
