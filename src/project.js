@@ -7,6 +7,7 @@ const projectFactory = (title) => {
     let uuid = self.crypto.randomUUID();
     let tasks = [];
 
+    //TODO: can we do this as part of CTOR?
     function appendTask(task){
         tasks.push(task);
     }
@@ -40,30 +41,22 @@ inbox.addSelf();
 
 // Creates a project using info from modal
 function createProject(){
-    // Fetch data from modal
-    const title = document.querySelector('#modalProject #modalTitle').value;
-
     // Create new project object and add it to the projects array
-    const newProject = projectFactory(title);
+    const newProject = projectFactory(document.querySelector('#modalProject #modalTitle').value);
     newProject.addSelf();
-
-    // Append the newly created project to localStorage. 
-    LS_addProject(newProject);    
+     
+    LS_addProject(newProject); // Append the newly created project to localStorage.
 }
 
 // Updates a project using info from modal
 function editProject(){
-    // Get the project we want to edit
-    const project = projects.find(item => item.uuid == modalProject.getAttribute('uuid'));
+    const project = projects.find(item => item.uuid == modalProject.getAttribute('uuid')); // Get the project we want to edit
+    project.title = document.querySelector('#modalProject #modalTitle').value; // Update the project with the new params
 
-    // Update the project with the new params
-    project.title = (document.querySelector('#modalProject #modalTitle').value);
-
-    // Update edited project to localStorage. 
-    LS_editProject(project);
+    LS_editProject(project); // Update edited project to localStorage. 
 }
 
 function removeProject(project){
-    projects = projects.filter(proj => proj.uuid != project.uuid);
+    projects = projects.filter(proj => proj != project);
     LS_removeProject(project);
 }
