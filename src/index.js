@@ -17,20 +17,22 @@ if (localStorage.length){
     localStorage.setItem("inbox", JSON.stringify(arr));
 }
 const createTaskBtn = document.querySelector('#createTask');
-createTaskBtn.addEventListener('click', () => createTask());
+createTaskBtn.addEventListener('click', () => createTask_prompt());
 
 const createProjectBtn = document.querySelector('#createProject');
-createProjectBtn.addEventListener('click', () => createProject());
+createProjectBtn.addEventListener('click', () => createProject_prompt());
 
 // Hotkey support
 document.addEventListener('keydown', (e) => {
     if (modal.hasAttribute('open') || modalProject.hasAttribute('open')) return; // If a modal is already open, ignore the key
     switch (e.key){
         case 't':
-            createTask();
+            e.preventDefault();
+            createTask_prompt();
             break;
         case 'p':
-            createProject();
+            e.preventDefault();
+            createProject_prompt();
             break;
         case '1':
             HOTKEY_selectAllTasks();
@@ -42,19 +44,19 @@ document.addEventListener('keydown', (e) => {
             HOTKEY_selectWeekTasks();
             break;        
     }
-    e.preventDefault();
+    
     
 }, false);
 
 
 // CreateTask and createProject open the respective modal to gather info
-function createTask(){
+function createTask_prompt(){
     modal.setAttribute('modalType', 'create');
     document.querySelector('#modal #heading').textContent = 'Create New Task';
     modal.showModal();
 }
 
-function createProject(){
+function createProject_prompt(){
     modalProject.setAttribute('modalType', 'create');
     document.querySelector('#modalProject #heading').textContent = 'Create New Project';
     modalProject.showModal();  

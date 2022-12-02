@@ -78,7 +78,7 @@ function loadSampleData(){
     // AUTOMOTIVE
     createTask(automotive, "Change car oil", "Use Shell Rotella T6", thisWeek, true);
     createTask(automotive, "Change air filter", "", farAway, false);
-    createTask(automotive, "Buy a new car", "2020+ BMW X3-m40i", '2023-12-25', true);
+    createTask(automotive, "Buy a new car", "2020+ BMW X3m40i", '2023-12-25', true);
     
     location.reload();
 }
