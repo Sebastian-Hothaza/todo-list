@@ -2,6 +2,13 @@ export { LS_addTask, LS_editTask, LS_removeTask, LS_addProject, LS_editProject, 
 import { projects, projectFactory } from "./project"
 import { taskItemFactory } from "./task";
 
+/*
+*** A note about UUID loading from LocalStorage ***
+UUID loading is required since once a task is stored in LS, that UUID persists with it.
+When we create new task from LS_load, if we don't re-use that UUID, we get a random one to which the delete btn associates with.
+Thus when we click delete, the UUID doesn't match and we cannot update the LS to remove it
+*/
+
 
 // Adds task object to existing project 
 function LS_addTask(project, task){

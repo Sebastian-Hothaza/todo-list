@@ -70,7 +70,7 @@ function editTask(){
         }
     }
 
-    //TODO: const project = projects.find(item => item.uuid == modalProject.getAttribute('uuid'));
+    //TODO: can we use this like we did in project? const project = projects.find(item => item.uuid == modalProject.getAttribute('uuid'));
 
     // Update the task with the new params
     task.title = (document.querySelector('#modal #modalTitle').value);

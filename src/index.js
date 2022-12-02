@@ -3,11 +3,10 @@ import { LS_load } from "./localStorage"
 import { loadSampleData } from "./sampleTasks";
 export { loadSampleData } // Whatever we export here will be accessible in console using global.XXX
 
-const createTaskBtn = document.querySelector('#createTask');
-const createProjectBtn = document.querySelector('#createProject');
 const modal = document.querySelector('#modal');
 const modalProject = document.querySelector('#modalProject');
 
+// Try to load from LS
 if (localStorage.length){ 
     LS_load();
     DOM_ListProjects();
@@ -17,34 +16,21 @@ if (localStorage.length){
     let arr = [];
     localStorage.setItem("inbox", JSON.stringify(arr));
 }
+const createTaskBtn = document.querySelector('#createTask');
+createTaskBtn.addEventListener('click', () => createTask());
 
-// Create task
-createTaskBtn.addEventListener('click', () => {
-    modal.setAttribute('modalType', 'create');
-    document.querySelector('#modal #heading').textContent = 'Create New Task';
-    modal.showModal();
-});
-
-// Create project
-createProjectBtn.addEventListener('click', () => {
-    modalProject.setAttribute('modalType', 'create');
-    document.querySelector('#modalProject #heading').textContent = 'Create New Project';
-    modalProject.showModal();    
-});
+const createProjectBtn = document.querySelector('#createProject');
+createProjectBtn.addEventListener('click', () => createProject());
 
 // Hotkey support
 document.addEventListener('keydown', (e) => {
-    if (modal.hasAttribute('open') || modalProject.hasAttribute('open')) return;
+    if (modal.hasAttribute('open') || modalProject.hasAttribute('open')) return; // If a modal is already open, ignore the key
     switch (e.key){
         case 't':
-            modal.setAttribute('modalType', 'create');
-            document.querySelector('#modal #heading').textContent = 'Create New Task';
-            modal.showModal();
+            createTask();
             break;
         case 'p':
-            modalProject.setAttribute('modalType', 'create');
-            document.querySelector('#modalProject #heading').textContent = 'Create New Project';
-            modalProject.showModal(); 
+            createProject();
             break;
         case '1':
             HOTKEY_selectAllTasks();
@@ -60,12 +46,16 @@ document.addEventListener('keydown', (e) => {
     
 }, false);
 
-/*
-*** A note about UUID ***
-UUID is required since once a task is stored in LS, that UUID persists with it.
-When we create new task from LS_load, if we don't re-use that UUID, we get a random one to which the delete btn associates with.
-Thus when we click delete, the UUID doesn't match and we cannot update the LS to remove it
-*/
 
+// CreateTask and createProject open the respective modal to gather info
+function createTask(){
+    modal.setAttribute('modalType', 'create');
+    document.querySelector('#modal #heading').textContent = 'Create New Task';
+    modal.showModal();
+}
 
-
+function createProject(){
+    modalProject.setAttribute('modalType', 'create');
+    document.querySelector('#modalProject #heading').textContent = 'Create New Project';
+    modalProject.showModal();  
+}
