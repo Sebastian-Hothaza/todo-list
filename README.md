@@ -14,3 +14,5 @@ global.clear() - Clears localStorage and refreshes the page
 - 3: View tasks due in the next 7 days
 - t: Create task
 - p: Create project
+
+[Live Site](https://sebastian-hothaza.github.io/todo-list/)
